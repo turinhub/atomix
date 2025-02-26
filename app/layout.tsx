@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Turinhub Toolbox - 免费在线工具箱",
-  description: "常用网页工具的汇集网站，基于 Vercel 和 Cloudflare 提供免费、无广告、无数据存储的常用在线工具箱。",
+  title: "Turinhub Atomix - 常用网页模组网站",
+  description: "常用网页模组网站，仅供内部开发使用。",
 };
 
 export default function RootLayout({

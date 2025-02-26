@@ -59,7 +59,7 @@ export function NavUser() {
             </DropdownMenuSub>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => {
-              window.open('https://github.com/turinhub/toolbox/issues', '_blank')
+              window.open('https://github.com/turinhub/atomix/issues', '_blank')
               toast.success("正在跳转到 GitHub Issues")
             }}>
               <Github className="mr-2 h-4 w-4" />

@@ -1,4 +1,4 @@
-import { FileText, Shield, LucideIcon } from "lucide-react";
+import { FileText, Shield, LucideIcon, BookOpen } from "lucide-react";
 
 export type ToolItem = {
   name: string;
@@ -17,6 +17,28 @@ export type ToolCategory = {
 };
 
 export const toolCategories: ToolCategory[] = [
+  {
+    title: "阅读与播放",
+    description: "文档阅读和媒体播放工具",
+    icon: BookOpen,
+    url: "/reader",
+    tools: [
+      { 
+        name: "PDF 阅读器", 
+        title: "PDF 阅读器", 
+        description: "在线 PDF 文档阅读工具", 
+        path: "/reader/pdf",
+        url: "/reader/pdf" 
+      },
+      { 
+        name: "视频播放器", 
+        title: "视频播放器", 
+        description: "在线视频播放工具", 
+        path: "/reader/video",
+        url: "/reader/video" 
+      }
+    ]
+  },
   {
     title: "安全与验证",
     description: "保护网站免受自动化攻击的安全工具",

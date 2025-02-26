@@ -8,7 +8,7 @@ export default function Home() {
       <section className="text-center py-12">
         <h1 className="text-4xl font-bold mb-4">Turinhub Atomix</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          常用网页模组网站，基于 Vercel 和 Cloudflare 提供免费、无广告、无数据存储的常用在线工具箱。
+        常用网页模组网站，仅供内部开发使用。
         </p>
       </section>
 
@@ -46,7 +46,7 @@ export default function Home() {
 
       <section className="mt-8 text-center">
         <p className="text-muted-foreground">
-          开源项目 · <a href="https://github.com/turinhub/atomix" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">GitHub</a>
+          内部项目 · <a href="https://github.com/turinhub/atomix" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">GitHub</a>
         </p>
       </section>
     </div>
