@@ -68,11 +68,18 @@ export const toolCategories: ToolCategory[] = [
     url: "/ai",
     tools: [
       { 
-        name: "Deepseek Qwen 32B 对话", 
-        title: "Deepseek Qwen 32B 对话", 
-        description: "基于 Cloudflare AI 的 Deepseek Qwen 32B 对话工具", 
+        name: "OpenAI Compatible API 对话", 
+        title: "OpenAI Compatible API 对话", 
+        description: "基于 OpenAI 兼容接口的对话工具，使用 Deepseek Qwen 32B", 
         path: "/ai/chat",
         url: "/ai/chat" 
+      },
+      { 
+        name: "Dify API 对话", 
+        title: "Dify API 对话", 
+        description: "基于 Dify API 的对话工具，使用 DeepSeek R1", 
+        path: "/ai/dify-chat",
+        url: "/ai/dify-chat" 
       }
     ]
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Loader2, Bot, StopCircle } from "lucide-react";
+import { Loader2, Bot, StopCircle, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -157,27 +157,59 @@ export function ChatInterface() {
     }
   };
 
+  // 重置对话
+  const resetConversation = () => {
+    // 如果正在加载或流式输出，先停止
+    if (isStreaming) {
+      stopStreaming();
+    }
+    
+    // 重置消息列表，只保留系统提示
+    setMessages([
+      createChatMessage("system", DEFAULT_SYSTEM_PROMPT),
+    ]);
+    
+    // 重置状态
+    setIsLoading(false);
+    setIsStreaming(false);
+    setStreamedContent("");
+    
+    toast.success("对话已重置");
+  };
+
   return (
     <Card className="w-full flex flex-col h-[calc(100vh-12rem)]">
-      <CardHeader className="p-4 pb-0 flex-shrink-0">
-        <div className="flex items-center justify-between">
+      <CardHeader className="p-3 sm:p-4 pb-0 flex-shrink-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="flex items-center gap-2">
             <Bot className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-semibold">AI 对话</h2>
           </div>
-          <div className="text-sm text-muted-foreground">
-            使用 Deepseek Qwen 32B 模型
+          <div className="flex flex-wrap items-center gap-2 justify-between sm:justify-end">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={resetConversation}
+              className="flex items-center gap-1"
+              disabled={isLoading && !isStreaming}
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>新对话</span>
+            </Button>
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              使用 Deepseek Qwen 32B 模型
+            </div>
           </div>
         </div>
       </CardHeader>
-      <Separator className="my-4" />
-      <CardContent className="p-4 pt-0 flex-grow overflow-hidden">
-        <div className="h-full overflow-y-auto pr-4 pb-4">
+      <Separator className="my-3 sm:my-4" />
+      <CardContent className="p-3 sm:p-4 pt-0 flex-grow overflow-hidden">
+        <div className="h-full overflow-y-auto pr-2 sm:pr-4 pb-4">
           {messages.length === 1 && !streamedContent && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-              <Bot className="h-12 w-12 mb-4 text-primary/50" />
-              <h3 className="text-lg font-medium mb-2">Deepseek Qwen 32B 对话助手</h3>
-              <p className="max-w-md">
+              <Bot className="h-10 w-10 sm:h-12 sm:w-12 mb-3 sm:mb-4 text-primary/50" />
+              <h3 className="text-base sm:text-lg font-medium mb-2">Deepseek Qwen 32B 对话助手</h3>
+              <p className="text-sm sm:text-base max-w-md px-2 sm:px-0">
                 输入您的问题，AI 将为您提供回答。您可以询问任何问题，包括编程、知识查询、创意写作等。
               </p>
             </div>
@@ -190,15 +222,15 @@ export function ChatInterface() {
           
           {/* 流式输出的临时消息 */}
           {streamedContent && (
-            <div className="flex gap-3 my-6 group justify-start">
+            <div className="flex gap-2 sm:gap-3 my-4 sm:my-6 group justify-start">
               <div className="h-8 w-8 mt-1 flex-shrink-0">
                 <div className="h-full w-full rounded-full bg-primary/10 flex items-center justify-center text-primary">
                   <Bot className="h-4 w-4" />
                 </div>
               </div>
-              <div className="flex flex-col max-w-[80%]">
+              <div className="flex flex-col max-w-[85%] sm:max-w-[80%]">
                 <Card className="bg-muted">
-                  <CardContent className="p-3 prose prose-sm dark:prose-invert max-w-none">
+                  <CardContent className="p-2 sm:p-3 prose prose-sm dark:prose-invert max-w-none">
                     <ThinkContent content={streamedContent} />
                     <span className="animate-pulse inline-block ml-1">▋</span>
                   </CardContent>
@@ -215,10 +247,10 @@ export function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-2 flex-shrink-0 border-t">
+      <CardFooter className="p-3 sm:p-4 pt-2 flex-shrink-0 border-t">
         <div className="w-full">
           {isStreaming && (
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-3 sm:mb-4">
               <Button 
                 variant="outline" 
                 size="sm" 

@@ -12,12 +12,6 @@ export default function AILayout({
 }) {
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">AI 对话</h1>
-        <p className="text-muted-foreground">
-          OpenAI API Compatible 对话页面
-        </p>
-      </div>
       <div className="flex-1">{children}</div>
     </div>
   );
