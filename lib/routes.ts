@@ -1,4 +1,4 @@
-import { FileText, Shield, LucideIcon, BookOpen } from "lucide-react";
+import { FileText, Shield, LucideIcon, BookOpen, Bot } from "lucide-react";
 
 export type ToolItem = {
   name: string;
@@ -58,6 +58,21 @@ export const toolCategories: ToolCategory[] = [
         description: "受保护的页面（Cloudflare Turnstile）", 
         path: "/safe/protected",
         url: "/safe/protected" 
+      }
+    ]
+  },
+  {
+    title: "AI 对话",
+    description: "人工智能对话和交互工具",
+    icon: Bot,
+    url: "/ai",
+    tools: [
+      { 
+        name: "Deepseek Qwen 32B 对话", 
+        title: "Deepseek Qwen 32B 对话", 
+        description: "基于 Cloudflare AI 的 Deepseek Qwen 32B 对话工具", 
+        path: "/ai/chat",
+        url: "/ai/chat" 
       }
     ]
   }
