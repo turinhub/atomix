@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Loader2, Bot, StopCircle, RefreshCw } from "lucide-react";
+import { Loader2, Bot, StopCircle, RefreshCw, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { ChatMessage } from "@/lib/ai/types";
 import { createDifyChatMessage, DIFY_SYSTEM_PROMPT, chatHistoryToDifyQuery } from "@/lib/ai/dify-utils";
 import { toast } from "sonner";
 import { ThinkContent } from "./think-content";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export function DifyChatInterface() {
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -19,6 +21,8 @@ export function DifyChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamedContent, setStreamedContent] = useState("");
+  const [showThinking, setShowThinking] = useState(true); // 控制是否显示思考过程
+  const [isThinking, setIsThinking] = useState(false); // 标记是否在思考过程中
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -80,7 +84,7 @@ export function DifyChatInterface() {
         const decoder = new TextDecoder();
         let fullContent = "";
         let buffer = ""; // 用于存储不完整的行
-        let isThinking = false; // 标记是否在思考过程中
+        let localIsThinking = false; // 本地变量，标记是否在思考过程中
 
         try {
           while (true) {
@@ -118,14 +122,16 @@ export function DifyChatInterface() {
                     const content = eventData.answer || "";
                     
                     // 检查是否是思考过程的开始
-                    if (content.includes("> 💭") && !isThinking) {
-                      isThinking = true;
+                    if (content.includes("> 💭") && !localIsThinking) {
+                      localIsThinking = true;
+                      setIsThinking(true); // 更新组件状态
                       // 直接累积内容，不添加 <think> 标签
                       fullContent += content;
                     } 
                     // 检查是否是思考过程的结束
-                    else if (content.includes("\n>") && isThinking) {
-                      isThinking = false;
+                    else if (content.includes("\n>") && localIsThinking) {
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                       // 直接累积内容，不添加 </think> 标签
                       fullContent += content;
                     }
@@ -145,20 +151,24 @@ export function DifyChatInterface() {
                       if (content.includes("\n>")) {
                         // 包含完整的思考过程，直接使用内容
                         fullContent = content;
-                        isThinking = false;
+                        localIsThinking = false;
+                        setIsThinking(false); // 更新组件状态
                       } else {
                         // 只包含思考开始，没有结束
                         fullContent = content;
-                        isThinking = true;
+                        localIsThinking = true;
+                        setIsThinking(true); // 更新组件状态
                       }
-                    } else if (content.includes("\n>") && isThinking) {
+                    } else if (content.includes("\n>") && localIsThinking) {
                       // 包含思考结束，但没有开始（之前已经开始了）
                       fullContent = content;
-                      isThinking = false;
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                     } else {
                       // 不包含思考过程标记
                       fullContent = content;
-                      isThinking = false;
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                     }
                     
                     setStreamedContent(fullContent);
@@ -170,6 +180,7 @@ export function DifyChatInterface() {
                     }
                     setIsStreaming(false);
                     setStreamedContent("");
+                    setIsThinking(false); // 重置思考状态
                     
                     // 记录使用统计信息
                     if (eventData.metadata && eventData.usage) {
@@ -198,13 +209,15 @@ export function DifyChatInterface() {
                     const content = eventData.answer || "";
                     
                     // 处理最后一块数据中可能的思考过程
-                    if (isThinking && content.includes("\n>")) {
+                    if (localIsThinking && content.includes("\n>")) {
                       // 思考过程结束
-                      isThinking = false;
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                       fullContent += content;
-                    } else if (content.includes("> 💭") && !isThinking) {
+                    } else if (content.includes("> 💭") && !localIsThinking) {
                       // 思考过程开始
-                      isThinking = true;
+                      localIsThinking = true;
+                      setIsThinking(true); // 更新组件状态
                       fullContent += content;
                     } else {
                       // 普通内容
@@ -221,20 +234,24 @@ export function DifyChatInterface() {
                       if (content.includes("\n>")) {
                         // 包含完整的思考过程，直接使用内容
                         fullContent = content;
-                        isThinking = false;
+                        localIsThinking = false;
+                        setIsThinking(false); // 更新组件状态
                       } else {
                         // 只包含思考开始，没有结束
                         fullContent = content;
-                        isThinking = true;
+                        localIsThinking = true;
+                        setIsThinking(true); // 更新组件状态
                       }
-                    } else if (content.includes("\n>") && isThinking) {
+                    } else if (content.includes("\n>") && localIsThinking) {
                       // 包含思考结束，但没有开始（之前已经开始了）
                       fullContent = content;
-                      isThinking = false;
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                     } else {
                       // 不包含思考过程标记
                       fullContent = content;
-                      isThinking = false;
+                      localIsThinking = false;
+                      setIsThinking(false); // 更新组件状态
                     }
                     
                     setStreamedContent(fullContent);
@@ -253,6 +270,7 @@ export function DifyChatInterface() {
             setMessages((prev) => [...prev, assistantMessage]);
             setIsStreaming(false);
             setStreamedContent("");
+            setIsThinking(false); // 重置思考状态
           }
         } catch (streamError) {
           // 如果是用户主动取消，不显示错误
@@ -277,6 +295,7 @@ export function DifyChatInterface() {
       setIsLoading(false);
       setIsStreaming(false);
       setStreamedContent("");
+      setIsThinking(false); // 重置思考状态
       abortControllerRef.current = null;
     }
   };
@@ -297,6 +316,7 @@ export function DifyChatInterface() {
     setIsLoading(false);
     setIsStreaming(false);
     setStreamedContent("");
+    setIsThinking(false); // 重置思考状态
     
     toast.success("对话已重置");
   };
@@ -310,6 +330,26 @@ export function DifyChatInterface() {
             <h2 className="text-lg font-semibold">DeepSeek R1 对话</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2 justify-between sm:justify-end">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="show-thinking"
+                checked={showThinking}
+                onCheckedChange={setShowThinking}
+              />
+              <Label htmlFor="show-thinking" className="text-xs sm:text-sm cursor-pointer">
+                {showThinking ? (
+                  <span className="flex items-center gap-1">
+                    <Eye className="h-3.5 w-3.5" />
+                    <span>显示思考过程</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <EyeOff className="h-3.5 w-3.5" />
+                    <span>隐藏思考过程</span>
+                  </span>
+                )}
+              </Label>
+            </div>
             <Button 
               variant="outline" 
               size="sm" 
@@ -355,7 +395,20 @@ export function DifyChatInterface() {
               <div className="flex flex-col max-w-[85%] sm:max-w-[80%]">
                 <Card className="bg-muted">
                   <CardContent className="p-2 sm:p-3 prose prose-sm dark:prose-invert max-w-none">
-                    <ThinkContent content={streamedContent} />
+                    {showThinking ? (
+                      <ThinkContent content={streamedContent} />
+                    ) : (
+                      <>
+                        {isThinking ? (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>AI 正在思考中...</span>
+                          </div>
+                        ) : (
+                          <ThinkContent content={streamedContent} />
+                        )}
+                      </>
+                    )}
                     <span className="animate-pulse inline-block ml-1">▋</span>
                   </CardContent>
                 </Card>
