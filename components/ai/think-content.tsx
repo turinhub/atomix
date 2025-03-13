@@ -7,9 +7,10 @@ import ReactMarkdown from "react-markdown";
 
 interface ThinkContentProps {
   content: string;
+  showThinking?: boolean;
 }
 
-export function ThinkContent({ content }: ThinkContentProps) {
+export function ThinkContent({ content, showThinking = true }: ThinkContentProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   
   // 检查内容是否包含 </think> 标签或思考过程标记
@@ -100,75 +101,80 @@ export function ThinkContent({ content }: ThinkContentProps) {
   
   return (
     <div className="space-y-1.5 sm:space-y-2">
-      {/* 思考部分（可折叠） */}
-      <div className="rounded-md border border-muted">
-        <div 
-          className="flex items-center p-1.5 sm:p-2 cursor-pointer bg-muted/30"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <Button variant="ghost" size="icon" className="h-4 w-4 sm:h-5 sm:w-5 p-0 mr-1">
-            {isExpanded ? <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />}
-          </Button>
-          <span className="text-xs sm:text-sm font-medium">思考过程</span>
-        </div>
-        
-        {isExpanded && (
-          <div className="p-2 sm:p-3 text-[10px] sm:text-xs text-muted-foreground border-t">
-            <ReactMarkdown
-              components={{
-                pre: ({ ...props }) => (
-                  <div className="my-1.5 sm:my-2 overflow-auto rounded-md bg-black/10 dark:bg-white/10 p-1.5 sm:p-2 text-[10px] sm:text-xs">
-                    <pre {...props} />
-                  </div>
-                ),
-                code: ({ className, children, ...props }) => {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return match ? (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  ) : (
-                    <code className="bg-black/10 dark:bg-white/10 rounded-md px-1 py-0.5 text-[10px] sm:text-xs" {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            >
-              {thinkContent}
-            </ReactMarkdown>
-          </div>
-        )}
-      </div>
-      
-      {/* 回答部分 */}
-      {responseContent && (
-        <div className="text-sm sm:text-base">
-          <ReactMarkdown
-            components={{
-              pre: ({ ...props }) => (
-                <div className="my-1.5 sm:my-2 overflow-auto rounded-md bg-black/10 dark:bg-white/10 p-1.5 sm:p-2 text-xs sm:text-sm">
-                  <pre {...props} />
-                </div>
-              ),
-              code: ({ className, children, ...props }) => {
-                const match = /language-(\w+)/.exec(className || "");
-                return match ? (
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                ) : (
-                  <code className="bg-black/10 dark:bg-white/10 rounded-md px-1 py-0.5 text-xs sm:text-sm" {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
+      {/* 思考部分（可折叠），仅在 showThinking 为 true 时显示 */}
+      {showThinking && hasThinkContent(thinkContent) && (
+        <div className="rounded-md border border-muted">
+          <div 
+            className="flex items-center p-1.5 sm:p-2 cursor-pointer bg-muted/30"
+            onClick={() => setIsExpanded(!isExpanded)}
           >
-            {responseContent}
-          </ReactMarkdown>
+            <Button variant="ghost" size="icon" className="h-4 w-4 sm:h-5 sm:w-5 p-0 mr-1">
+              {isExpanded ? <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />}
+            </Button>
+            <span className="text-xs sm:text-sm font-medium">思考过程</span>
+          </div>
+          
+          {isExpanded && (
+            <div className="p-2 sm:p-3 text-[10px] sm:text-xs text-muted-foreground border-t">
+              <ReactMarkdown
+                components={{
+                  pre: ({ ...props }) => (
+                    <div className="my-1.5 sm:my-2 overflow-auto rounded-md bg-black/10 dark:bg-white/10 p-1.5 sm:p-2 text-[10px] sm:text-xs">
+                      <pre {...props} />
+                    </div>
+                  ),
+                  code: ({ className, children, ...props }) => {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return match ? (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    ) : (
+                      <code className="bg-black/10 dark:bg-white/10 rounded-md px-1 py-0.5 text-[10px] sm:text-xs" {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              >
+                {thinkContent}
+              </ReactMarkdown>
+            </div>
+          )}
         </div>
       )}
+      
+      {/* 回答部分 */}
+      <div className="text-sm sm:text-base">
+        <ReactMarkdown
+          components={{
+            pre: ({ ...props }) => (
+              <div className="my-1.5 sm:my-2 overflow-auto rounded-md bg-black/10 dark:bg-white/10 p-1.5 sm:p-2 text-xs sm:text-sm">
+                <pre {...props} />
+              </div>
+            ),
+            code: ({ className, children, ...props }) => {
+              const match = /language-(\w+)/.exec(className || "");
+              return match ? (
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              ) : (
+                <code className="bg-black/10 dark:bg-white/10 rounded-md px-1 py-0.5 text-xs sm:text-sm" {...props}>
+                  {children}
+                </code>
+              );
+            },
+          }}
+        >
+          {responseContent || content}
+        </ReactMarkdown>
+      </div>
     </div>
   );
+}
+
+// 辅助函数：检查思考内容是否有效
+function hasThinkContent(content: string): boolean {
+  return !!content && content.trim() !== "";
 } 

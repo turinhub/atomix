@@ -381,7 +381,7 @@ export function DifyChatInterface() {
           {messages
             .filter((msg) => msg.role !== "system")
             .map((message) => (
-              <ChatMessageItem key={message.id} message={message} />
+              <ChatMessageItem key={message.id} message={message} showThinking={showThinking} />
             ))}
           
           {/* 流式输出的临时消息 */}
@@ -396,7 +396,7 @@ export function DifyChatInterface() {
                 <Card className="bg-muted">
                   <CardContent className="p-2 sm:p-3 prose prose-sm dark:prose-invert max-w-none">
                     {showThinking ? (
-                      <ThinkContent content={streamedContent} />
+                      <ThinkContent content={streamedContent} showThinking={true} />
                     ) : (
                       <>
                         {isThinking ? (
@@ -405,7 +405,7 @@ export function DifyChatInterface() {
                             <span>AI 正在思考中...</span>
                           </div>
                         ) : (
-                          <ThinkContent content={streamedContent} />
+                          <ThinkContent content={streamedContent} showThinking={false} />
                         )}
                       </>
                     )}

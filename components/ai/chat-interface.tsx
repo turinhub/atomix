@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Loader2, Bot, StopCircle, RefreshCw } from "lucide-react";
+import { Loader2, Bot, StopCircle, RefreshCw, Eye, EyeOff } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import { ChatMessage } from "@/lib/ai/types";
 import { createChatMessage, DEFAULT_SYSTEM_PROMPT } from "@/lib/ai/utils";
 import { toast } from "sonner";
 import { ThinkContent } from "./think-content";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 // 固定使用的模型
 const FIXED_MODEL = "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b";
@@ -27,6 +29,8 @@ export function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamedContent, setStreamedContent] = useState("");
+  const [showThinking, setShowThinking] = useState(true); // 控制是否显示思考过程
+  const [isThinking, setIsThinking] = useState(false); // 标记是否在思考过程中
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -122,6 +126,13 @@ export function ChatInterface() {
               const parsedData = JSON.parse(data);
               const content = parsedData.content || "";
               
+              // 检查是否包含思考过程标记
+              if (content.includes("> 💭") && !isThinking) {
+                setIsThinking(true);
+              } else if (content.includes("\n>") && isThinking) {
+                setIsThinking(false);
+              }
+              
               // 累积内容
               accumulatedContent += content;
               setStreamedContent(accumulatedContent);
@@ -145,6 +156,7 @@ export function ChatInterface() {
         }
         setIsStreaming(false);
         setStreamedContent("");
+        setIsThinking(false); // 重置思考状态
         abortControllerRef.current = null;
       }
     } catch (error) {
@@ -152,8 +164,12 @@ export function ChatInterface() {
       toast.error(error instanceof Error ? error.message : "发送消息失败");
       setIsStreaming(false);
       setStreamedContent("");
+      setIsThinking(false); // 重置思考状态
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
+      setStreamedContent("");
+      setIsThinking(false); // 重置思考状态
     }
   };
 
@@ -173,6 +189,7 @@ export function ChatInterface() {
     setIsLoading(false);
     setIsStreaming(false);
     setStreamedContent("");
+    setIsThinking(false); // 重置思考状态
     
     toast.success("对话已重置");
   };
@@ -186,6 +203,26 @@ export function ChatInterface() {
             <h2 className="text-lg font-semibold">AI 对话</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2 justify-between sm:justify-end">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="show-thinking"
+                checked={showThinking}
+                onCheckedChange={setShowThinking}
+              />
+              <Label htmlFor="show-thinking" className="text-xs sm:text-sm cursor-pointer">
+                {showThinking ? (
+                  <span className="flex items-center gap-1">
+                    <Eye className="h-3.5 w-3.5" />
+                    <span>显示思考过程</span>
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <EyeOff className="h-3.5 w-3.5" />
+                    <span>隐藏思考过程</span>
+                  </span>
+                )}
+              </Label>
+            </div>
             <Button 
               variant="outline" 
               size="sm" 
@@ -217,7 +254,7 @@ export function ChatInterface() {
           {messages
             .filter((msg) => msg.role !== "system")
             .map((message) => (
-              <ChatMessageItem key={message.id} message={message} />
+              <ChatMessageItem key={message.id} message={message} showThinking={showThinking} />
             ))}
           
           {/* 流式输出的临时消息 */}
@@ -231,7 +268,20 @@ export function ChatInterface() {
               <div className="flex flex-col max-w-[85%] sm:max-w-[80%]">
                 <Card className="bg-muted">
                   <CardContent className="p-2 sm:p-3 prose prose-sm dark:prose-invert max-w-none">
-                    <ThinkContent content={streamedContent} />
+                    {showThinking ? (
+                      <ThinkContent content={streamedContent} showThinking={true} />
+                    ) : (
+                      <>
+                        {isThinking ? (
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>AI 正在思考中...</span>
+                          </div>
+                        ) : (
+                          <ThinkContent content={streamedContent} showThinking={false} />
+                        )}
+                      </>
+                    )}
                     <span className="animate-pulse inline-block ml-1">▋</span>
                   </CardContent>
                 </Card>

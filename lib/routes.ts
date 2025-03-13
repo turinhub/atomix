@@ -68,9 +68,9 @@ export const toolCategories: ToolCategory[] = [
     url: "/ai",
     tools: [
       { 
-        name: "OpenAI Compatible API 对话", 
-        title: "OpenAI Compatible API 对话", 
-        description: "基于 OpenAI 兼容接口的对话工具，使用 Deepseek Qwen 32B", 
+        name: "Cloudflare AI API 对话", 
+        title: "Cloudflare AI API 对话", 
+        description: "使用 Cloudflare AI API，使用 Deepseek Qwen 32B", 
         path: "/ai/chat",
         url: "/ai/chat" 
       },

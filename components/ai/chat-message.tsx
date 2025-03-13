@@ -11,9 +11,10 @@ import { ThinkContent } from "./think-content";
 
 interface ChatMessageProps {
   message: ChatMessage;
+  showThinking?: boolean;
 }
 
-export function ChatMessageItem({ message }: ChatMessageProps) {
+export function ChatMessageItem({ message, showThinking = true }: ChatMessageProps) {
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
@@ -67,7 +68,7 @@ export function ChatMessageItem({ message }: ChatMessageProps) {
             isAssistant ? "prose prose-sm dark:prose-invert max-w-none" : ""
           )}>
             {isAssistant ? (
-              <ThinkContent content={message.content} />
+              <ThinkContent content={message.content} showThinking={showThinking} />
             ) : (
               <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
             )}
