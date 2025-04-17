@@ -1,5 +1,8 @@
 # ChangeLog
 
+## v0.1.6 - 20250417
+- 增加 GIS 目录
+
 ## v0.1.5 - 20250313
 - 优化对话页面的思考过程隐藏机制。
 
@@ -13,6 +16,8 @@
 - init
 
 # TODO List
+- [ ] 增加 KeplerGL 的页面
 - [ ] 补充 MDX 文档目录
 - [ ] 补充 turingue 的 pdf 阅读方案
 - [ ] 增加 ai 图像生成、ai 对话功能
+- [ ] 增加 表格 Demo，使用 Shadcn UI Data Table

@@ -1,4 +1,4 @@
-import { FileText, Shield, LucideIcon, BookOpen, Bot } from "lucide-react";
+import { FileText, Shield, LucideIcon, BookOpen, Bot, Globe } from "lucide-react";
 
 export type ToolItem = {
   name: string;
@@ -80,6 +80,21 @@ export const toolCategories: ToolCategory[] = [
         description: "基于 Dify API 的对话工具，使用 DeepSeek R1", 
         path: "/ai/dify-chat",
         url: "/ai/dify-chat" 
+      }
+    ]
+  },
+  {
+    title: "地理可视化",
+    description: "地理数据的可视化工具",
+    icon: Globe,
+    url: "/gis",
+    tools: [
+      { 
+        name: "Google Maps", 
+        title: "地球可视化", 
+        description: "使用 Google Maps 展示地球可视化", 
+        path: "/gis/google-maps",
+        url: "/gis/google-maps" 
       }
     ]
   }
