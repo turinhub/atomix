@@ -91,10 +91,17 @@ export const toolCategories: ToolCategory[] = [
     tools: [
       { 
         name: "Google Maps", 
-        title: "地球可视化", 
+        title: "谷歌地图", 
         description: "使用 Google Maps 展示地球可视化", 
-        path: "/gis/google-maps",
-        url: "/gis/google-maps" 
+        path: "/gis/google-map",
+        url: "/gis/google-map" 
+      },
+      { 
+        name: "高德地图", 
+        title: "高德地图", 
+        description: "基于高德地图的碳排放可视化", 
+        path: "/gis/gaode-map",
+        url: "/gis/gaode-map" 
       }
     ]
   }
