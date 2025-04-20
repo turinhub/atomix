@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Scene, PointLayer, HeatmapLayer, ILayer } from '@antv/l7'
-import { GaodeMap } from '@antv/l7-maps'
+import { GaodeMap, Mapbox } from '@antv/l7-maps'
 
-// 高德地图API密钥
+// 地图API密钥
 const AMAP_API_KEY = process.env.NEXT_PUBLIC_AMAP_API_KEY || ""
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
 // 定义热力图数据点类型
 type HeatmapDataPoint = {
@@ -27,12 +28,16 @@ type MapComponentProps = {
   visualizationType: string
   filteredData: EmissionPoint[]
   generateHeatmapData: () => HeatmapDataPoint[]
+  mapProvider: 'amap' | 'mapbox'
+  mapboxStyle?: string
 }
 
 export default function MapComponent({ 
   visualizationType, 
   filteredData,
-  generateHeatmapData
+  generateHeatmapData,
+  mapProvider,
+  mapboxStyle = 'dark'
 }: MapComponentProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<Scene | null>(null)
@@ -44,16 +49,31 @@ export default function MapComponent({
     if (!mapRef.current) return
 
     try {
-      // 创建场景
-      const scene = new Scene({
-        id: mapRef.current,
-        map: new GaodeMap({
-          style: 'normal',  // 默认使用标准主题
+      // 根据选择的地图提供商创建地图
+      let mapInstance;
+      
+      if (mapProvider === 'mapbox') {
+        mapInstance = new Mapbox({
+          style: mapboxStyle,
+          center: [108.9, 34.2],
+          zoom: 3,
+          pitch: visualizationType === "3dcolumn" ? 45 : 0,
+          token: MAPBOX_TOKEN
+        });
+      } else {
+        mapInstance = new GaodeMap({
+          style: 'normal',
           center: [108.9, 34.2],
           zoom: 3,
           pitch: visualizationType === "3dcolumn" ? 45 : 0,
           token: AMAP_API_KEY
-        }),
+        });
+      }
+      
+      // 创建场景
+      const scene = new Scene({
+        id: mapRef.current,
+        map: mapInstance,
         logoVisible: false
       })
 
@@ -88,8 +108,8 @@ export default function MapComponent({
     } catch (error) {
       console.error("地图初始化失败:", error)
     }
-  // 只监听visualizationType的变化
-  }, [visualizationType])
+  // 监听visualizationType、mapProvider和mapboxStyle的变化
+  }, [visualizationType, mapProvider, mapboxStyle])
 
   // 添加修复地图显示的CSS样式
   const addMapFixStylesheet = () => {

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import dynamic from 'next/dynamic'
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -91,6 +91,8 @@ export default function CarbonEmissionMapPage() {
   const [currentYear, setCurrentYear] = useState<number>(2022)
   const [currentData, setCurrentData] = useState<EmissionData[]>(timelineData[4].data)
   const [filteredTypes, setFilteredTypes] = useState<string[]>(["工业", "能源", "采矿"])
+  const [mapProvider, setMapProvider] = useState<'amap' | 'mapbox'>('amap')
+  const [mapboxStyle, setMapboxStyle] = useState<string>("dark")
 
   // 数据筛选
   const filteredData = currentData.filter(item => filteredTypes.includes(item.type))
@@ -124,7 +126,37 @@ export default function CarbonEmissionMapPage() {
         <CardContent>
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap gap-4">
-              <div className="w-full">
+              <div className="w-full md:w-1/2">
+                <Label>地图提供商</Label>
+                <Select value={mapProvider} onValueChange={(value: 'amap' | 'mapbox') => setMapProvider(value)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="选择地图提供商" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="amap">高德地图</SelectItem>
+                    <SelectItem value="mapbox">Mapbox</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {mapProvider === 'mapbox' && (
+                <div className="w-full md:w-1/2">
+                  <Label>Mapbox 样式</Label>
+                  <Select value={mapboxStyle} onValueChange={setMapboxStyle}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="选择 Mapbox 样式" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="dark">暗色主题</SelectItem>
+                      <SelectItem value="light">亮色主题</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap gap-4 mt-4">
+              <div className="w-full md:w-1/2">
                 <Label>可视化类型</Label>
                 <Select value={visualizationType} onValueChange={setVisualizationType}>
                   <SelectTrigger className="w-full">
@@ -137,9 +169,7 @@ export default function CarbonEmissionMapPage() {
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-4 mt-4">
+              
               <div className="w-full md:w-1/2">
                 <Label>排放源类型筛选</Label>
                 <div className="flex gap-2 mt-2">
@@ -166,18 +196,18 @@ export default function CarbonEmissionMapPage() {
                   </Button>
                 </div>
               </div>
-              
-              <div className="w-full md:w-1/2">
-                <Label>年份: {currentYear}</Label>
-                <Slider
-                  value={[currentYear]}
-                  min={2018}
-                  max={2022}
-                  step={1}
-                  onValueChange={([value]) => setCurrentYear(value)}
-                  className="mt-2"
-                />
-              </div>
+            </div>
+            
+            <div className="mt-4">
+              <Label>年份: {currentYear}</Label>
+              <Slider
+                value={[currentYear]}
+                min={2018}
+                max={2022}
+                step={1}
+                onValueChange={([value]) => setCurrentYear(value)}
+                className="mt-2"
+              />
             </div>
             
             <div className="h-[600px] w-full bg-gray-100 rounded-md mt-4 relative overflow-hidden border-b-4 border-gray-300">
@@ -185,6 +215,8 @@ export default function CarbonEmissionMapPage() {
                 visualizationType={visualizationType}
                 filteredData={filteredData}
                 generateHeatmapData={generateHeatmapData}
+                mapProvider={mapProvider}
+                mapboxStyle={mapboxStyle}
               />
             </div>
           </div>
@@ -213,6 +245,8 @@ export default function CarbonEmissionMapPage() {
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">操作指南</h3>
                 <ul className="list-disc pl-6 space-y-2">
+                  <li><strong>地图提供商选择</strong>：可在“高德地图”和“Mapbox”之间切换地图底图</li>
+                  <li><strong>Mapbox 样式选择</strong>：选择 Mapbox 时，可以切换不同样式（暗色、亮色、街道、卫星影像等）</li>
                   <li><strong>可视化类型选择</strong>：可选择“热力图”、“气泡图”或“3D柱状图”展示碳排放数据</li>
                   <li><strong>排放源筛选</strong>：可通过筛选按钮选择显示或隐藏不同类型的排放源</li>
                   <li><strong>年份调整</strong>：通过滑块可以调整查看不同年份的碳排放数据</li>
