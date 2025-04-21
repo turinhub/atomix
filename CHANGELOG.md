@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.1.8 - 20250421
+- 增加 KeplerGL 基础 Demo。
+
 ## v0.1.7 - 20250420
 - 增加高德地图的碳排放地图的 Demo，增加对 Mapbox 的支持。
 
@@ -19,7 +22,7 @@
 - init
 
 # TODO List
-- [ ] 增加 KeplerGL 的页面
+- [x] 增加 KeplerGL 的 Demo 页面（https://github.com/keplergl/kepler.gl）
 - [ ] 补充 MDX 文档目录
 - [ ] 补充 turingue 的 pdf 阅读方案
 - [ ] 增加 ai 图像生成、ai 对话功能

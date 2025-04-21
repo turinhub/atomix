@@ -102,6 +102,13 @@ export const toolCategories: ToolCategory[] = [
         description: "基于高德地图的碳排放可视化", 
         path: "/gis/gaode-map",
         url: "/gis/gaode-map" 
+      },
+      { 
+        name: "Kepler.gl", 
+        title: "Kepler.gl 地图", 
+        description: "使用 Kepler.gl 进行大规模地理数据可视化", 
+        path: "/gis/kepler-map",
+        url: "/gis/kepler-map" 
       }
     ]
   }
