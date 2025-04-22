@@ -175,44 +175,35 @@ export default function MapComponent({
     }
   }
 
-  // 添加图层的辅助函数
-  const updateVisualization = () => {
-    if (!mapLoaded || !sceneRef.current) return
-    
-    try {
-      // 先清除所有现有图层
-      clearAllLayers()
-      
-      // 根据类型添加新图层
-      let newLayer
-      if (visualizationType === "point") {
-        newLayer = addPointLayer(sceneRef.current)
-      } else if (visualizationType === "heatmap") {
-        newLayer = addHeatmapLayer(sceneRef.current)
-      } else if (visualizationType === "3dcolumn") {
-        newLayer = add3DColumnLayer(sceneRef.current)
-      }
-      
-      // 如果添加了新图层，记录到引用中
-      if (newLayer) {
-        layersRef.current.push(newLayer)
-      }
-    } catch (error) {
-      console.error("更新可视化类型时出错:", error)
-    }
-  }
-
   // 更新地图样式
   useEffect(() => {
     if (mapLoaded && sceneRef.current) {
       try {
         // 更新可视化
-        updateVisualization()
+        const scene = sceneRef.current;
+        
+        // 先清除所有现有图层
+        clearAllLayers();
+        
+        // 根据类型添加新图层
+        let newLayer;
+        if (visualizationType === "point") {
+          newLayer = addPointLayer(scene);
+        } else if (visualizationType === "heatmap") {
+          newLayer = addHeatmapLayer(scene);
+        } else if (visualizationType === "3dcolumn") {
+          newLayer = add3DColumnLayer(scene);
+        }
+        
+        // 如果添加了新图层，记录到引用中
+        if (newLayer) {
+          layersRef.current.push(newLayer);
+        }
       } catch (error) {
-        console.error("更新地图时出错:", error)
+        console.error("更新地图时出错:", error);
       }
     }
-  }, [visualizationType, filteredData, mapLoaded])
+  }, [visualizationType, filteredData, mapLoaded]);
 
   // 更新3D视角
   useEffect(() => {

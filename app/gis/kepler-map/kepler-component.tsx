@@ -7,6 +7,10 @@ import { taskMiddleware } from "react-palm/tasks";
 import KeplerGl from "@kepler.gl/components";
 import { addDataToMap } from "@kepler.gl/actions";
 import keplerGlReducer from "@kepler.gl/reducers";
+// 导入错误处理程序
+import { setupErrorHandler } from "./error-handler";
+// 导入新的猴子补丁
+import { applyReactCompatPatches } from "./monkey-patch";
 
 // 配置 Redux Store
 const reducers = combineReducers({
@@ -63,6 +67,21 @@ export default function KeplerComponent({
   const [mapboxToken, setMapboxToken] = useState<string>("");
   const [mapLoaded, setMapLoaded] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+
+  // 设置错误处理程序
+  useEffect(() => {
+    // 设置错误处理来过滤掉不必要的警告
+    const cleanupErrorHandler = setupErrorHandler();
+    // 应用 React 19 猴子补丁
+    const cleanup = applyReactCompatPatches();
+    
+    return () => {
+      // 清理错误处理
+      cleanupErrorHandler();
+      // 清理 React 19 猴子补丁
+      cleanup();
+    };
+  }, []);
 
   // 监听窗口大小变化
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { FileText, Shield, LucideIcon, BookOpen, Bot, Globe } from "lucide-react";
+import { FileText, Shield, LucideIcon, BookOpen, Bot, Globe, Sparkles } from "lucide-react";
 
 export type ToolItem = {
   name: string;
@@ -109,6 +109,21 @@ export const toolCategories: ToolCategory[] = [
         description: "使用 Kepler.gl 进行大规模地理数据可视化", 
         path: "/gis/kepler-map",
         url: "/gis/kepler-map" 
+      }
+    ]
+  },
+  {
+    title: "动画效果",
+    description: "交互式动画和图形效果展示",
+    icon: Sparkles,
+    url: "/animation",
+    tools: [
+      { 
+        name: "PixiJS 示例", 
+        title: "PixiJS 动画示例", 
+        description: "使用 PixiJS 创建的简单交互式图形动画示例", 
+        path: "/animation/pixi",
+        url: "/animation/pixi" 
       }
     ]
   }

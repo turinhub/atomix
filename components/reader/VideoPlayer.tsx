@@ -186,6 +186,5 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
 }
 
 // 修复 ESLint 警告：将对象赋值给变量后再导出
-// eslint-disable-next-line import/no-anonymous-default-export
-// 默认导出组件，以便动态导入
-export default { VideoPlayer }; 
+const VideoPlayerModule = { VideoPlayer };
+export default VideoPlayerModule; 

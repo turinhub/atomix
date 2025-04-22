@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.1.9 - 20250422
+- 增加 PixiJS 动画演示页面
+
 # v0.1.8 - 20250421
 - 增加 KeplerGL 基础 Demo。
 
