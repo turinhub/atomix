@@ -124,6 +124,13 @@ export const toolCategories: ToolCategory[] = [
         description: "使用 PixiJS 创建的简单交互式图形动画示例", 
         path: "/animation/pixi",
         url: "/animation/pixi" 
+      },
+      { 
+        name: "Excalidraw 绘图", 
+        title: "Excalidraw 绘图工具", 
+        description: "基于 Excalidraw 的手绘风格白板绘图工具演示", 
+        path: "/animation/excalidraw",
+        url: "/animation/excalidraw" 
       }
     ]
   }
@@ -134,4 +141,4 @@ export const homeNavItem = {
   title: "首页",
   url: "/",
   icon: FileText,
-}; 
+};

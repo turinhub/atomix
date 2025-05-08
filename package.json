@@ -11,6 +11,7 @@
   "dependencies": {
     "@antv/l7": "^2.22.5",
     "@antv/l7-maps": "^2.22.5",
+    "@excalidraw/excalidraw": "^0.18.0",
     "@kepler.gl/actions": "^3.1.1",
     "@kepler.gl/components": "^3.1.1",
     "@kepler.gl/reducers": "^3.1.1",
@@ -35,7 +36,7 @@
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.476.0",
-    "next": "15.3.1",
+    "next": "15.3.2",
     "next-themes": "^0.4.4",
     "next-turnstile": "^1.0.2",
     "openai": "^4.87.3",
