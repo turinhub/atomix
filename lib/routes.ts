@@ -99,9 +99,16 @@ export const toolCategories: ToolCategory[] = [
       { 
         name: "高德地图", 
         title: "高德地图", 
-        description: "基于高德地图的碳排放可视化", 
+        description: "基于高德地图的碳排放可视化，专注中国地区数据", 
         path: "/gis/gaode-map",
         url: "/gis/gaode-map" 
+      },
+      { 
+        name: "Mapbox 地图", 
+        title: "Mapbox 地图", 
+        description: "基于 Mapbox 的多样化地理数据可视化，支持多种样式和格式", 
+        path: "/gis/mapbox-map",
+        url: "/gis/mapbox-map" 
       },
       { 
         name: "Kepler.gl", 
@@ -109,6 +116,13 @@ export const toolCategories: ToolCategory[] = [
         description: "使用 Kepler.gl 进行大规模地理数据可视化", 
         path: "/gis/kepler-map",
         url: "/gis/kepler-map" 
+      },
+      { 
+        name: "Globe.gl 热力图", 
+        title: "Globe.gl 地球热力图", 
+        description: "基于 Globe.gl 的 3D 地球热力图可视化，展示全球数据分布", 
+        path: "/animation/globe-heatmap",
+        url: "/animation/globe-heatmap" 
       }
     ]
   },
@@ -131,13 +145,6 @@ export const toolCategories: ToolCategory[] = [
         description: "基于 Excalidraw 的手绘风格白板绘图工具演示", 
         path: "/animation/excalidraw",
         url: "/animation/excalidraw" 
-      },
-      { 
-        name: "Globe.gl 热力图", 
-        title: "Globe.gl 地球热力图", 
-        description: "基于 Globe.gl 的 3D 地球热力图可视化，展示全球数据分布", 
-        path: "/animation/globe-heatmap",
-        url: "/animation/globe-heatmap" 
       }
     ]
   }

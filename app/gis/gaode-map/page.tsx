@@ -80,19 +80,17 @@ const timelineData: TimelineData[] = [
 ]
 
 // 动态导入地图组件，设置ssr为false，确保它只在客户端渲染
-const CarbonEmissionMap = dynamic(
+const GaodeMapComponent = dynamic(
   () => import('@/app/gis/gaode-map/map-component').then(mod => mod.default),
   { ssr: false }
 )
 
-export default function CarbonEmissionMapPage() {
+export default function GaodeMapPage() {
   // 状态管理
   const [visualizationType, setVisualizationType] = useState<string>("heatmap")
   const [currentYear, setCurrentYear] = useState<number>(2022)
   const [currentData, setCurrentData] = useState<EmissionData[]>(timelineData[4].data)
   const [filteredTypes, setFilteredTypes] = useState<string[]>(["工业", "能源", "采矿"])
-  const [mapProvider, setMapProvider] = useState<'amap' | 'mapbox'>('amap')
-  const [mapboxStyle, setMapboxStyle] = useState<string>("dark")
 
   // 数据筛选
   const filteredData = currentData.filter(item => filteredTypes.includes(item.type))
@@ -118,44 +116,14 @@ export default function CarbonEmissionMapPage() {
     <div className="flex flex-col gap-8">
       <Card className="mb-4 overflow-hidden">
         <CardHeader>
-          <CardTitle>全球碳排放地图</CardTitle>
+          <CardTitle>高德地图碳排放可视化</CardTitle>
           <CardDescription>
-            基于地理空间数据的碳排放分布可视化与动态监测
+            基于高德地图的碳排放分布可视化与动态监测
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap gap-4">
-              <div className="w-full md:w-1/2">
-                <Label>地图提供商</Label>
-                <Select value={mapProvider} onValueChange={(value: 'amap' | 'mapbox') => setMapProvider(value)}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="选择地图提供商" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="amap">高德地图</SelectItem>
-                    <SelectItem value="mapbox">Mapbox</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {mapProvider === 'mapbox' && (
-                <div className="w-full md:w-1/2">
-                  <Label>Mapbox 样式</Label>
-                  <Select value={mapboxStyle} onValueChange={setMapboxStyle}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="选择 Mapbox 样式" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dark">暗色主题</SelectItem>
-                      <SelectItem value="light">亮色主题</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex flex-wrap gap-4 mt-4">
               <div className="w-full md:w-1/2">
                 <Label>可视化类型</Label>
                 <Select value={visualizationType} onValueChange={setVisualizationType}>
@@ -211,12 +179,10 @@ export default function CarbonEmissionMapPage() {
             </div>
             
             <div className="h-[600px] w-full bg-gray-100 rounded-md mt-4 relative overflow-hidden border-b-4 border-gray-300">
-              <CarbonEmissionMap 
+              <GaodeMapComponent 
                 visualizationType={visualizationType}
                 filteredData={filteredData}
                 generateHeatmapData={generateHeatmapData}
-                mapProvider={mapProvider}
-                mapboxStyle={mapboxStyle}
               />
             </div>
           </div>
@@ -225,7 +191,7 @@ export default function CarbonEmissionMapPage() {
       
       <Card className="relative z-10 shadow-lg mt-2">
         <CardHeader>
-          <CardTitle>关于全球碳排放地图</CardTitle>
+          <CardTitle>关于高德地图碳排放可视化</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="intro">
@@ -236,22 +202,23 @@ export default function CarbonEmissionMapPage() {
             </TabsList>
             <TabsContent value="intro" className="mt-4">
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">全球碳排放地图实验简介</h3>
-                <p>本实验基于AntV L7地理空间数据可视化框架，展示了全球主要碳排放源的分布情况与排放量数据。通过多种可视化方式，学习者可以直观了解碳排放的地理分布特征、时间变化趋势，以及不同类型排放源的差异。</p>
-                <p>实验支持多种可视化模式，包括热力图、气泡图和3D柱状图，可以根据需要切换查看不同的视觉效果。同时，实验也提供了时间轴功能，可以观察2018-2022年间的碳排放变化情况。</p>
+                <h3 className="text-lg font-medium">高德地图碳排放可视化实验简介</h3>
+                <p>本实验基于高德地图服务和 AntV L7 地理空间数据可视化框架，展示了全球主要碳排放源的分布情况与排放量数据。通过多种可视化方式，学习者可以直观了解碳排放的地理分布特征、时间变化趋势，以及不同类型排放源的差异。</p>
+                <p>高德地图提供了准确的中国地区地理数据，特别适合展示国内的碳排放分布情况。实验支持热力图、气泡图和3D柱状图三种可视化模式，可以根据需要切换查看不同的视觉效果。同时，实验也提供了时间轴功能，可以观察2018-2022年间的碳排放变化情况。</p>
               </div>
             </TabsContent>
             <TabsContent value="guide" className="mt-4">
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">操作指南</h3>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li><strong>地图提供商选择</strong>：可在“高德地图”和“Mapbox”之间切换地图底图</li>
-                  <li><strong>Mapbox 样式选择</strong>：选择 Mapbox 时，可以切换不同样式（暗色、亮色、街道、卫星影像等）</li>
                   <li><strong>可视化类型选择</strong>：可选择“热力图”、“气泡图”或“3D柱状图”展示碳排放数据</li>
-                  <li><strong>排放源筛选</strong>：可通过筛选按钮选择显示或隐藏不同类型的排放源</li>
+                  <li><strong>排放源筛选</strong>：可通过筛选按钮选择显示或隐藏不同类型的排放源（工业、能源、采矿）</li>
                   <li><strong>年份调整</strong>：通过滑块可以调整查看不同年份的碳排放数据</li>
                   <li><strong>地图交互</strong>：可以通过鼠标拖拽平移地图，滚轮缩放，右键旋转（3D模式下）</li>
                   <li><strong>数据查看</strong>：鼠标悬停在排放源上可查看详细信息</li>
+                  <li><strong>热力图模式</strong>：展示碳排放密度分布，颜色越深表示排放浓度越高</li>
+                  <li><strong>气泡图模式</strong>：用圆圈大小表示排放量，便于比较不同地点的排放差异</li>
+                  <li><strong>3D柱状图模式</strong>：立体展示排放量高度，提供更直观的视觉效果</li>
                 </ul>
               </div>
             </TabsContent>
@@ -267,7 +234,7 @@ export default function CarbonEmissionMapPage() {
                   <li><strong>人口密度</strong>：人口集中区域排放量较高</li>
                   <li><strong>气候条件</strong>：影响能源消费和碳排放</li>
                 </ul>
-                <p>空间可视化方法有助于识别碳排放的空间模式，包括“热点”区域、“冷点”区域以及空间转移趋势，为精准减排提供支持。</p>
+                <p>高德地图的精确定位服务，特别适合进行中国地区的碳排放空间分析，可以准确识别碳排放的空间模式，包括“热点”区域、“冷点”区域以及空间转移趋势，为精准减排提供支持。</p>
               </div>
             </TabsContent>
           </Tabs>

@@ -2,6 +2,7 @@
 
 注意：
 - 如果有不明确的事项，请向我确认，不要直接修改代码。
+- 不用撰写 README 文档来总结工作。
 
 项目使用：
 - nextjs 14，使用 typescript、tailwind css 和 shadcn UI。主配色文件在 app/globals.css。

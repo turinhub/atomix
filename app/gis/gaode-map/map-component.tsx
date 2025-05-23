@@ -2,11 +2,10 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Scene, PointLayer, HeatmapLayer, ILayer } from '@antv/l7'
-import { GaodeMap, Mapbox } from '@antv/l7-maps'
+import { GaodeMap } from '@antv/l7-maps'
 
 // 地图API密钥
 const AMAP_API_KEY = process.env.NEXT_PUBLIC_AMAP_API_KEY || ""
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ""
 
 // 定义热力图数据点类型
 type HeatmapDataPoint = {
@@ -28,16 +27,12 @@ type MapComponentProps = {
   visualizationType: string
   filteredData: EmissionPoint[]
   generateHeatmapData: () => HeatmapDataPoint[]
-  mapProvider: 'amap' | 'mapbox'
-  mapboxStyle?: string
 }
 
-export default function MapComponent({ 
+export default function GaodeMapComponent({ 
   visualizationType, 
   filteredData,
-  generateHeatmapData,
-  mapProvider,
-  mapboxStyle = 'dark'
+  generateHeatmapData
 }: MapComponentProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<Scene | null>(null)
@@ -49,26 +44,14 @@ export default function MapComponent({
     if (!mapRef.current) return
 
     try {
-      // 根据选择的地图提供商创建地图
-      let mapInstance;
-      
-      if (mapProvider === 'mapbox') {
-        mapInstance = new Mapbox({
-          style: mapboxStyle,
-          center: [108.9, 34.2],
-          zoom: 3,
-          pitch: visualizationType === "3dcolumn" ? 45 : 0,
-          token: MAPBOX_TOKEN
-        });
-      } else {
-        mapInstance = new GaodeMap({
-          style: 'normal',
-          center: [108.9, 34.2],
-          zoom: 3,
-          pitch: visualizationType === "3dcolumn" ? 45 : 0,
-          token: AMAP_API_KEY
-        });
-      }
+      // 创建高德地图实例
+      const mapInstance = new GaodeMap({
+        style: 'normal',
+        center: [108.9, 34.2],
+        zoom: 3,
+        pitch: visualizationType === "3dcolumn" ? 45 : 0,
+        token: AMAP_API_KEY
+      })
       
       // 创建场景
       const scene = new Scene({
@@ -82,7 +65,7 @@ export default function MapComponent({
       // 设置场景加载事件
       scene.on('loaded', () => {
         setMapLoaded(true)
-        console.log('地图加载完成')
+        console.log('高德地图加载完成')
         
         // 添加样式表以修复地图显示问题
         addMapFixStylesheet()
@@ -106,10 +89,10 @@ export default function MapComponent({
         layersRef.current = []
       }
     } catch (error) {
-      console.error("地图初始化失败:", error)
+      console.error("高德地图初始化失败:", error)
     }
-  // 监听visualizationType、mapProvider和mapboxStyle的变化
-  }, [visualizationType, mapProvider, mapboxStyle])
+  // 监听visualizationType的变化
+  }, [visualizationType])
 
   // 添加修复地图显示的CSS样式
   const addMapFixStylesheet = () => {
@@ -121,7 +104,7 @@ export default function MapComponent({
     const styleElement = document.createElement('style')
     styleElement.id = styleId
     styleElement.textContent = `
-      .map-container {
+      .gaode-map-container {
         position: relative !important;
         z-index: 1 !important;
         isolation: isolate !important;
@@ -200,7 +183,7 @@ export default function MapComponent({
           layersRef.current.push(newLayer);
         }
       } catch (error) {
-        console.error("更新地图时出错:", error);
+        console.error("更新高德地图时出错:", error);
       }
     }
   }, [visualizationType, filteredData, mapLoaded]);
@@ -328,7 +311,7 @@ export default function MapComponent({
   return (
     <div 
       ref={mapRef} 
-      className="map-container" 
+      className="gaode-map-container" 
       style={{ 
         width: "100%", 
         height: "100%", 
