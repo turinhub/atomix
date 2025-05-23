@@ -14,6 +14,9 @@
 ## AI 对话
 - Deepseek Qwen 32B 对话（基于 Cloudflare AI）
 
+## 动画
+- Demo：https://excalidraw.com/，代码开源在 Githu：https://github.com/excalidraw/excalidraw/blob/master/excalidraw-app/index.html。
+
 # 环境配置
 
 项目使用 Next.js 14、TypeScript、Tailwind CSS 和 Shadcn UI 构建。

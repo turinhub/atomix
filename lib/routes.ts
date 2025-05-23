@@ -131,6 +131,13 @@ export const toolCategories: ToolCategory[] = [
         description: "基于 Excalidraw 的手绘风格白板绘图工具演示", 
         path: "/animation/excalidraw",
         url: "/animation/excalidraw" 
+      },
+      { 
+        name: "Globe.gl 热力图", 
+        title: "Globe.gl 地球热力图", 
+        description: "基于 Globe.gl 的 3D 地球热力图可视化，展示全球数据分布", 
+        path: "/animation/globe-heatmap",
+        url: "/animation/globe-heatmap" 
       }
     ]
   }
