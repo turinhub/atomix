@@ -94,7 +94,7 @@ export default function GaodeMapPage() {
 
   // 数据筛选
   const filteredData = currentData.filter(item => filteredTypes.includes(item.type))
-  
+
   // 根据年份更新数据
   useEffect(() => {
     const yearData = timelineData.find(item => item.year === currentYear)

@@ -1,4 +1,4 @@
-import { FileText, Shield, LucideIcon, BookOpen, Bot, Globe, Sparkles } from "lucide-react";
+import { FileText, Shield, LucideIcon, BookOpen, Bot, Globe, Sparkles, Table } from "lucide-react";
 
 export type ToolItem = {
   name: string;
@@ -145,6 +145,21 @@ export const toolCategories: ToolCategory[] = [
         description: "基于 Excalidraw 的手绘风格白板绘图工具演示", 
         path: "/animation/excalidraw",
         url: "/animation/excalidraw" 
+      }
+    ]
+  },
+  {
+    title: "办公工具",
+    description: "在线办公和文档处理工具",
+    icon: Table,
+    url: "/office",
+    tools: [
+      { 
+        name: "在线表格", 
+        title: "在线表格处理", 
+        description: "类似Excel的在线表格编辑工具，支持公式计算、图表制作等功能", 
+        path: "/office/spreadsheet",
+        url: "/office/spreadsheet" 
       }
     ]
   }

@@ -1,5 +1,8 @@
 # ChangeLog
 
+# v0.1.13 - 20250609
+- 增加一个 office spreadsheet 的案例。
+
 # v0.1.11 - v0.1.12 - 20250523
 - 增加一个 Globe.gl 的案例。
 - 拆分高德地图和 mapbox。

@@ -12,6 +12,7 @@
     "@antv/l7": "^2.22.5",
     "@antv/l7-maps": "^2.22.5",
     "@excalidraw/excalidraw": "^0.18.0",
+    "@fortune-sheet/react": "^1.0.2",
     "@kepler.gl/actions": "^3.1.1",
     "@kepler.gl/components": "^3.1.1",
     "@kepler.gl/reducers": "^3.1.1",
