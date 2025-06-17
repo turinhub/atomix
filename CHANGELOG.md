@@ -1,5 +1,11 @@
 # ChangeLog
 
+# v0.1.14 - 20250617
+
+- 增加 markdown 在线编辑器
+- 增加 latex 在线编辑器
+- 增加导航栏搜索
+
 # v0.1.13 - 20250609
 - 增加一个 office spreadsheet 的案例。
 

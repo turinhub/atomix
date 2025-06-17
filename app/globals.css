@@ -151,3 +151,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* LaTeX 编辑器样式 */
+.latex-preview .katex-inline {
+  display: inline !important;
+  vertical-align: baseline;
+}
+
+.latex-preview .katex {
+  font-size: 1.1em;
+}
+
+.latex-preview .katex-display {
+  margin: 1em 0;
+  text-align: center;
+}

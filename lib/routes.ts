@@ -160,6 +160,20 @@ export const toolCategories: ToolCategory[] = [
         description: "类似Excel的在线表格编辑工具，支持公式计算、图表制作等功能", 
         path: "/office/spreadsheet",
         url: "/office/spreadsheet" 
+      },
+      { 
+        name: "Markdown 编辑器", 
+        title: "Markdown 在线编辑器", 
+        description: "支持实时预览的 Markdown 编辑器，适用于技术文档和笔记编写", 
+        path: "/office/markdown",
+        url: "/office/markdown" 
+      },
+      { 
+        name: "LaTeX 编辑器", 
+        title: "LaTeX 在线编辑器", 
+        description: "专业的 LaTeX 编辑器，支持数学公式、论文排版和实时预览", 
+        path: "/office/latex",
+        url: "/office/latex" 
       }
     ]
   }
