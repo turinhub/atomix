@@ -29,7 +29,7 @@ function TurnstileDemoContent() {
   return (
     <div className="max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Cloudflare Turnstile 演示</h1>
-      
+
       {redirectPath && (
         <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-300 dark:border-yellow-800 rounded-md">
           <p className="text-yellow-800 dark:text-yellow-300">
@@ -37,7 +37,7 @@ function TurnstileDemoContent() {
           </p>
         </div>
       )}
-      
+
       <div className="mb-8">
         <p className="text-muted-foreground mb-4">
           这是一个使用 Cloudflare Turnstile 进行人机验证的示例。
@@ -45,13 +45,17 @@ function TurnstileDemoContent() {
           但为了防止自动化攻击，某些敏感操作可能需要验证您是人类。
         </p>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="bg-card p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-4">基础人机验证</h2>
-          <TurnstileForm onVerificationSuccess={redirectPath ? handleVerificationSuccess : undefined} />
+          <TurnstileForm
+            onVerificationSuccess={
+              redirectPath ? handleVerificationSuccess : undefined
+            }
+          />
         </div>
-        
+
         <div className="bg-card p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold mb-4">保护内容示例</h2>
           <TurnstileProtection>
@@ -63,14 +67,26 @@ function TurnstileDemoContent() {
           </TurnstileProtection>
         </div>
       </div>
-      
+
       <div className="mt-8 p-4 bg-muted rounded-lg">
         <h3 className="text-lg font-medium mb-2">实现说明</h3>
         <ul className="list-disc pl-5 space-y-2">
-          <li>客户端组件使用 <code className="bg-muted-foreground/20 px-1 rounded">next-turnstile</code> 包来渲染验证组件</li>
+          <li>
+            客户端组件使用{" "}
+            <code className="bg-muted-foreground/20 px-1 rounded">
+              next-turnstile
+            </code>{" "}
+            包来渲染验证组件
+          </li>
           <li>服务端使用 Cloudflare Turnstile API 验证令牌的有效性</li>
           <li>验证成功后，设置 HTTP-only cookie 作为临时会话标记</li>
-          <li>提供了 <code className="bg-muted-foreground/20 px-1 rounded">TurnstileProtection</code> 组件，可以包装需要保护的内容</li>
+          <li>
+            提供了{" "}
+            <code className="bg-muted-foreground/20 px-1 rounded">
+              TurnstileProtection
+            </code>{" "}
+            组件，可以包装需要保护的内容
+          </li>
           <li>使用中间件自动拦截对受保护路径的访问，重定向到验证页面</li>
           <li>整个过程不收集任何个人信息，完全匿名</li>
         </ul>
@@ -86,4 +102,4 @@ export default function TurnstileDemoPage() {
       <TurnstileDemoContent />
     </Suspense>
   );
-} 
+}

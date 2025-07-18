@@ -1,10 +1,16 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Globe, MapPin, Satellite, Navigation } from "lucide-react"
-import Link from "next/link"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowRight, Globe, MapPin, Satellite, Navigation } from "lucide-react";
+import Link from "next/link";
 
 export default function GISPage() {
   const mapServices = [
@@ -16,7 +22,7 @@ export default function GISPage() {
       icon: Globe,
       features: ["全球地理数据", "街道视图", "卫星影像", "地标信息"],
       recommended: false,
-      badge: "全球服务"
+      badge: "全球服务",
     },
     {
       name: "高德地图",
@@ -26,7 +32,7 @@ export default function GISPage() {
       icon: MapPin,
       features: ["中国精确数据", "实时路况", "POI信息", "导航服务"],
       recommended: true,
-      badge: "国内推荐"
+      badge: "国内推荐",
     },
     {
       name: "Mapbox",
@@ -36,7 +42,7 @@ export default function GISPage() {
       icon: Satellite,
       features: ["多种样式", "高性能渲染", "自定义地图", "开发者友好"],
       recommended: true,
-      badge: "功能丰富"
+      badge: "功能丰富",
     },
     {
       name: "Kepler.gl",
@@ -46,9 +52,9 @@ export default function GISPage() {
       icon: Navigation,
       features: ["大规模数据", "动态可视化", "时空分析", "WebGL渲染"],
       recommended: false,
-      badge: "专业分析"
-    }
-  ]
+      badge: "专业分析",
+    },
+  ];
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -60,10 +66,13 @@ export default function GISPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {mapServices.map((service) => {
-          const IconComponent = service.icon
+        {mapServices.map(service => {
+          const IconComponent = service.icon;
           return (
-            <Card key={service.name} className={`relative overflow-hidden transition-all duration-300 hover:shadow-lg ${service.recommended ? 'ring-2 ring-primary' : ''}`}>
+            <Card
+              key={service.name}
+              className={`relative overflow-hidden transition-all duration-300 hover:shadow-lg ${service.recommended ? "ring-2 ring-primary" : ""}`}
+            >
               {service.recommended && (
                 <div className="absolute top-0 right-0 bg-primary text-primary-foreground px-3 py-1 text-sm font-medium rounded-bl-lg">
                   推荐
@@ -92,7 +101,10 @@ export default function GISPage() {
                   <h4 className="font-medium mb-2">主要特性</h4>
                   <div className="grid grid-cols-2 gap-2">
                     {service.features.map((feature, index) => (
-                      <div key={index} className="flex items-center space-x-2 text-sm text-muted-foreground">
+                      <div
+                        key={index}
+                        className="flex items-center space-x-2 text-sm text-muted-foreground"
+                      >
                         <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                         <span>{feature}</span>
                       </div>
@@ -107,7 +119,7 @@ export default function GISPage() {
                 </Link>
               </CardContent>
             </Card>
-          )
+          );
         })}
       </div>
 
@@ -174,30 +186,34 @@ export default function GISPage() {
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">🇨🇳 中国地区项目</h4>
               <p className="text-sm text-muted-foreground">
-                推荐使用<strong>高德地图</strong>，提供最准确的中国地区地理数据和本地化服务。
+                推荐使用<strong>高德地图</strong>
+                ，提供最准确的中国地区地理数据和本地化服务。
               </p>
             </div>
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">🎨 高度定制需求</h4>
               <p className="text-sm text-muted-foreground">
-                推荐使用<strong>Mapbox</strong>，支持丰富的样式选择和自定义地图设计。
+                推荐使用<strong>Mapbox</strong>
+                ，支持丰富的样式选择和自定义地图设计。
               </p>
             </div>
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">🌍 全球业务应用</h4>
               <p className="text-sm text-muted-foreground">
-                推荐使用<strong>Google Maps</strong>，提供全球范围的准确地理数据。
+                推荐使用<strong>Google Maps</strong>
+                ，提供全球范围的准确地理数据。
               </p>
             </div>
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">📊 专业数据分析</h4>
               <p className="text-sm text-muted-foreground">
-                推荐使用<strong>Kepler.gl</strong>，专为大规模地理数据可视化设计。
+                推荐使用<strong>Kepler.gl</strong>
+                ，专为大规模地理数据可视化设计。
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+}

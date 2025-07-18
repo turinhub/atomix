@@ -5,16 +5,20 @@
 # 功能树
 
 ## 阅读与播放
+
 - PDF 阅读器
 - 视频播放器
 
 ## 安全与验证
+
 - Cloudflare Turnstile
 
 ## AI 对话
+
 - Deepseek Qwen 32B 对话（基于 Cloudflare AI）
 
 ## 动画
+
 - Demo：https://excalidraw.com/，代码开源在 Githu：https://github.com/excalidraw/excalidraw/blob/master/excalidraw-app/index.html。
 
 # 环境配置

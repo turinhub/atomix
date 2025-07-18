@@ -8,8 +8,10 @@ export default function ReaderLayout({
   children: React.ReactNode;
 }>) {
   // 获取阅读与播放类别
-  const readerCategory = toolCategories.find(category => category.url === "/reader");
-  
+  const readerCategory = toolCategories.find(
+    category => category.url === "/reader"
+  );
+
   if (!readerCategory) {
     return <>{children}</>;
   }
@@ -23,9 +25,9 @@ export default function ReaderLayout({
             <BookOpen className="h-5 w-5" />
             <span>{readerCategory.title}</span>
           </div>
-          
+
           <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
-            {readerCategory.tools.map((tool) => (
+            {readerCategory.tools.map(tool => (
               <Link
                 key={tool.path}
                 href={tool.url}
@@ -37,9 +39,9 @@ export default function ReaderLayout({
           </nav>
         </div>
       </div>
-      
+
       {/* 主内容区域 */}
       <main className="flex-1">{children}</main>
     </div>
   );
-} 
+}

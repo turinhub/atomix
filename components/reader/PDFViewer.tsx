@@ -5,13 +5,19 @@ import { Document, Page } from "react-pdf";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, RotateCw } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
+} from "lucide-react";
 import { toast } from "sonner";
 import "@/lib/pdf-worker";
 
 // 导入 PDF.js 样式
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import "react-pdf/dist/Page/TextLayer.css";
 
 interface PDFViewerProps {
   file: string | File | null;
@@ -106,13 +112,13 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          
+
           <div className="flex items-center gap-1 px-2">
             <span className="text-sm">
               {pageNumber} / {numPages || "?"}
             </span>
           </div>
-          
+
           <Button
             variant="outline"
             size="icon"
@@ -133,7 +139,7 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
           >
             <ZoomOut className="h-4 w-4" />
           </Button>
-          
+
           <div className="w-24 px-2">
             <Slider
               value={[scale * 100]}
@@ -144,7 +150,7 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
               disabled={!file}
             />
           </div>
-          
+
           <Button
             variant="outline"
             size="icon"
@@ -156,12 +162,7 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
         </div>
 
         {/* 旋转控制 */}
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={rotate}
-          disabled={!file}
-        >
+        <Button variant="outline" size="icon" onClick={rotate} disabled={!file}>
           <RotateCw className="h-4 w-4" />
         </Button>
       </div>
@@ -180,9 +181,10 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
             }
             className="flex justify-center"
             options={{
-              cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/cmaps/',
+              cMapUrl: "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/cmaps/",
               cMapPacked: true,
-              standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/standard_fonts/'
+              standardFontDataUrl:
+                "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.8.69/standard_fonts/",
             }}
           >
             {isLoading ? (
@@ -212,4 +214,4 @@ export function PDFViewer({ file, onFileChange }: PDFViewerProps) {
 
 // 修复 ESLint 警告：将对象赋值给变量后再导出
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { PDFViewer }; 
+export default { PDFViewer };

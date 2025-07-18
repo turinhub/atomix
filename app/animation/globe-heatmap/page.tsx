@@ -4,17 +4,14 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 
 // 使用dynamic导入禁用SSR，确保组件只在客户端渲染
-const GlobeComponent = dynamic(
-  () => import('./globe-component'),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-[600px] border rounded-lg">
-        <p className="text-gray-500">正在加载 3D 地球...</p>
-      </div>
-    )
-  }
-);
+const GlobeComponent = dynamic(() => import("./globe-component"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[600px] border rounded-lg">
+      <p className="text-gray-500">正在加载 3D 地球...</p>
+    </div>
+  ),
+});
 
 export default function GlobeHeatmapPage() {
   const [activeDemo, setActiveDemo] = useState<string>("basic");
@@ -22,7 +19,7 @@ export default function GlobeHeatmapPage() {
   return (
     <div className="container mx-auto py-6">
       <h1 className="text-2xl font-bold mb-4">Globe.gl 地球热力图</h1>
-      
+
       <div className="mb-4">
         <p className="text-gray-600">
           Globe.gl 是一个基于 Three.js 的 WebGL 3D 地球数据可视化工具。
@@ -62,9 +59,9 @@ export default function GlobeHeatmapPage() {
           地震分布
         </button>
       </div>
-      
+
       <GlobeComponent demoType={activeDemo} />
-      
+
       <div className="mt-4">
         <h2 className="text-xl font-semibold mb-2">示例说明</h2>
         {activeDemo === "basic" && (
@@ -85,7 +82,7 @@ export default function GlobeHeatmapPage() {
           </p>
         )}
       </div>
-      
+
       <div className="mt-4">
         <h2 className="text-xl font-semibold mb-2">关于 Globe.gl</h2>
         <ul className="list-disc pl-5 space-y-1">
@@ -109,4 +106,4 @@ export default function GlobeHeatmapPage() {
       </div>
     </div>
   );
-} 
+}

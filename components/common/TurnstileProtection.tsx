@@ -9,22 +9,22 @@ interface TurnstileProtectionProps {
 
 export function TurnstileProtection({ children }: TurnstileProtectionProps) {
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
-  
+
   useEffect(() => {
     // 检查是否已经通过验证（从 cookie 或 localStorage 中）
     const checkVerification = async () => {
       try {
         // 尝试从 cookie 中读取验证状态
         const humanVerified = document.cookie
-          .split('; ')
-          .find(row => row.startsWith('human_verified='))
-          ?.split('=')[1];
-          
-        if (humanVerified === 'true') {
+          .split("; ")
+          .find(row => row.startsWith("human_verified="))
+          ?.split("=")[1];
+
+        if (humanVerified === "true") {
           setIsVerified(true);
           return;
         }
-        
+
         // 如果 cookie 中没有，则默认为未验证
         setIsVerified(false);
       } catch (error) {
@@ -32,15 +32,15 @@ export function TurnstileProtection({ children }: TurnstileProtectionProps) {
         setIsVerified(false);
       }
     };
-    
+
     checkVerification();
   }, []);
-  
+
   // 处理验证成功
   const handleVerificationSuccess = () => {
     setIsVerified(true);
   };
-  
+
   // 加载中状态
   if (isVerified === null) {
     return (
@@ -49,7 +49,7 @@ export function TurnstileProtection({ children }: TurnstileProtectionProps) {
       </div>
     );
   }
-  
+
   // 未验证状态，显示验证表单
   if (!isVerified) {
     return (
@@ -62,7 +62,7 @@ export function TurnstileProtection({ children }: TurnstileProtectionProps) {
       </div>
     );
   }
-  
+
   // 已验证状态，显示子组件
   return <>{children}</>;
-} 
+}

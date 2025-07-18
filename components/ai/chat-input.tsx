@@ -55,8 +55,8 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
 
   return (
     <div className="relative">
-      <form 
-        onSubmit={handleSubmit} 
+      <form
+        onSubmit={handleSubmit}
         className={cn(
           "relative rounded-lg border bg-background transition-all",
           isFocused ? "ring-2 ring-ring" : "",
@@ -66,7 +66,9 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
         <Textarea
           ref={textareaRef}
           value={input}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setInput(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+            setInput(e.target.value)
+          }
           onKeyDown={handleKeyDown}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -108,4 +110,4 @@ export function ChatInput({ onSendMessage, isLoading }: ChatInputProps) {
       </div>
     </div>
   );
-} 
+}

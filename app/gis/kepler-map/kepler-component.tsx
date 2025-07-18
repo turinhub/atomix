@@ -14,7 +14,7 @@ import { applyReactCompatPatches } from "./monkey-patch";
 
 // 配置 Redux Store
 const reducers = combineReducers({
-  keplerGl: keplerGlReducer
+  keplerGl: keplerGlReducer,
 });
 
 // 创建一个新的store
@@ -62,7 +62,7 @@ interface KeplerComponentProps {
 export default function KeplerComponent({
   activeTab,
   basicData,
-  advancedData
+  advancedData,
 }: KeplerComponentProps) {
   const [mapboxToken, setMapboxToken] = useState<string>("");
   const [mapLoaded, setMapLoaded] = useState(false);
@@ -74,7 +74,7 @@ export default function KeplerComponent({
     const cleanupErrorHandler = setupErrorHandler();
     // 应用 React 19 猴子补丁
     const cleanup = applyReactCompatPatches();
-    
+
     return () => {
       // 清理错误处理
       cleanupErrorHandler();
@@ -88,33 +88,35 @@ export default function KeplerComponent({
     // 初始化时设置尺寸
     const updateDimensions = () => {
       if (typeof window !== "undefined") {
-        const containerEl = document.querySelector('.border.rounded-lg');
+        const containerEl = document.querySelector(".border.rounded-lg");
         if (containerEl) {
           setDimensions({
             width: containerEl.clientWidth,
-            height: 600
+            height: 600,
           });
         }
       }
     };
-    
+
     // 立即执行一次
     updateDimensions();
-    
+
     // 添加窗口大小变化监听
     if (typeof window !== "undefined") {
-      window.addEventListener('resize', updateDimensions);
-      
+      window.addEventListener("resize", updateDimensions);
+
       // 清理函数
-      return () => window.removeEventListener('resize', updateDimensions);
+      return () => window.removeEventListener("resize", updateDimensions);
     }
   }, []);
 
   useEffect(() => {
     // 通常应该从环境变量获取，这里使用临时令牌
     // 注意：在实际应用中，您应该使用自己的 Mapbox 令牌
-    setMapboxToken("pk.eyJ1IjoieGR6aGFuZyIsImEiOiJjanpvMDhzbHkwNHRsM21xZTRoMWNrNGtlIn0.GjknvsIiCkUwiQXHG4zGXg");
-    
+    setMapboxToken(
+      "pk.eyJ1IjoieGR6aGFuZyIsImEiOiJjanpvMDhzbHkwNHRsM21xZTRoMWNrNGtlIn0.GjknvsIiCkUwiQXHG4zGXg"
+    );
+
     // 设置标志表示已加载
     setMapLoaded(true);
   }, []);
@@ -129,19 +131,19 @@ export default function KeplerComponent({
             datasets: {
               info: {
                 label: "北京出租车示例数据",
-                id: "beijing_taxi_trips"
+                id: "beijing_taxi_trips",
               },
-              data: basicData
+              data: basicData,
             },
             options: {
               centerMap: true,
-              readOnly: false
+              readOnly: false,
             },
             config: {
               visState: {
-                filters: []
-              }
-            }
+                filters: [],
+              },
+            },
           })
         );
       } else if (activeTab === "advanced") {
@@ -154,30 +156,30 @@ export default function KeplerComponent({
               {
                 info: {
                   label: "北京兴趣点",
-                  id: "beijing_poi"
+                  id: "beijing_poi",
                 },
-                data: poiData
+                data: poiData,
               },
               {
                 info: {
                   label: "北京行政区划",
-                  id: "beijing_districts"
+                  id: "beijing_districts",
                 },
-                data: districtsData
+                data: districtsData,
               },
               {
                 info: {
                   label: "北京流向数据",
-                  id: "beijing_flow"
+                  id: "beijing_flow",
                 },
-                data: flowData
-              }
+                data: flowData,
+              },
             ],
             options: {
               centerMap: true,
-              readOnly: false
+              readOnly: false,
             },
-            config: mapConfig.config
+            config: mapConfig.config,
           })
         );
       }
@@ -202,4 +204,4 @@ export default function KeplerComponent({
       )}
     </div>
   );
-} 
+}

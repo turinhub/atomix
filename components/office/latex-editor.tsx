@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Editor from '@monaco-editor/react';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
+import React, { useState, useEffect, useCallback } from "react";
+import Editor from "@monaco-editor/react";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 
 interface LaTeXEditorProps {
   className?: string;
 }
 
-const LaTeXEditor: React.FC<LaTeXEditorProps> = ({ className = '' }) => {
+const LaTeXEditor: React.FC<LaTeXEditorProps> = ({ className = "" }) => {
   const [content, setContent] = useState<string>(`\\documentclass{article}
 \\usepackage[utf8]{inputenc}
 \\usepackage{amsmath}
@@ -115,7 +115,7 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
 
   // 从 localStorage 加载保存的内容
   useEffect(() => {
-    const savedContent = localStorage.getItem('latex-editor-content');
+    const savedContent = localStorage.getItem("latex-editor-content");
     if (savedContent) {
       setContent(savedContent);
     }
@@ -123,101 +123,107 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
 
   // 保存内容到 localStorage
   const handleSave = useCallback(() => {
-    localStorage.setItem('latex-editor-content', content);
-    console.log('LaTeX 内容已保存到本地存储');
+    localStorage.setItem("latex-editor-content", content);
+    console.log("LaTeX 内容已保存到本地存储");
   }, [content]);
 
   // 监听 Ctrl+S 保存快捷键
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleSave]);
 
   // 解析和渲染LaTeX内容
   const parseLaTeXContent = useCallback((latex: string) => {
-    const sections: Array<{ type: string; content: string; math?: boolean }> = [];
-    
+    const sections: Array<{ type: string; content: string; math?: boolean }> =
+      [];
+
     // 清理文档结构命令
     let content = latex
-      .replace(/\\documentclass\{[^}]*\}/g, '')
-      .replace(/\\usepackage(\[[^\]]*\])?\{[^}]*\}/g, '')
-      .replace(/\\geometry\{[^}]*\}/g, '')
-      .replace(/\\begin\{document\}/g, '')
-      .replace(/\\end\{document\}/g, '');
+      .replace(/\\documentclass\{[^}]*\}/g, "")
+      .replace(/\\usepackage(\[[^\]]*\])?\{[^}]*\}/g, "")
+      .replace(/\\geometry\{[^}]*\}/g, "")
+      .replace(/\\begin\{document\}/g, "")
+      .replace(/\\end\{document\}/g, "");
 
     // 提取标题信息
     const titleMatch = content.match(/\\title\{([^}]*)\}/);
     const authorMatch = content.match(/\\author\{([^}]*)\}/);
     const dateMatch = content.match(/\\date\{([^}]*)\}/);
-    
+
     if (titleMatch) {
-      sections.push({ type: 'title', content: titleMatch[1] });
-      content = content.replace(/\\title\{[^}]*\}/g, '');
+      sections.push({ type: "title", content: titleMatch[1] });
+      content = content.replace(/\\title\{[^}]*\}/g, "");
     }
-    
+
     if (authorMatch) {
-      sections.push({ type: 'author', content: authorMatch[1] });
-      content = content.replace(/\\author\{[^}]*\}/g, '');
+      sections.push({ type: "author", content: authorMatch[1] });
+      content = content.replace(/\\author\{[^}]*\}/g, "");
     }
-    
+
     if (dateMatch) {
-      const dateContent = dateMatch[1].replace(/\\today/g, new Date().toLocaleDateString('zh-CN'));
-      sections.push({ type: 'date', content: dateContent });
-      content = content.replace(/\\date\{[^}]*\}/g, '');
+      const dateContent = dateMatch[1].replace(
+        /\\today/g,
+        new Date().toLocaleDateString("zh-CN")
+      );
+      sections.push({ type: "date", content: dateContent });
+      content = content.replace(/\\date\{[^}]*\}/g, "");
     }
-    
-    content = content.replace(/\\maketitle/g, '');
-    
+
+    content = content.replace(/\\maketitle/g, "");
+
     // 分割内容并处理数学公式 - 只分离块级数学公式，保留行内公式在文本中
-    const parts = content.split(/(\$\$[\s\S]*?\$\$|\\begin\{equation\}[\s\S]*?\\end\{equation\}|\\begin\{align\}[\s\S]*?\\end\{align\})/);
-    
+    const parts = content.split(
+      /(\$\$[\s\S]*?\$\$|\\begin\{equation\}[\s\S]*?\\end\{equation\}|\\begin\{align\}[\s\S]*?\\end\{align\})/
+    );
+
     parts.forEach(part => {
       if (!part.trim()) return;
-      
-      if (part.startsWith('$$') && part.endsWith('$$')) {
+
+      if (part.startsWith("$$") && part.endsWith("$$")) {
         // 块级数学公式
-        sections.push({ 
-          type: 'math-block', 
+        sections.push({
+          type: "math-block",
           content: part.slice(2, -2).trim(),
-          math: true 
+          math: true,
         });
-      } else if (part.includes('\\begin{equation}')) {
+      } else if (part.includes("\\begin{equation}")) {
         // equation环境
         const mathContent = part.trim();
-        sections.push({ 
-          type: 'math-block', 
+        sections.push({
+          type: "math-block",
           content: mathContent,
-          math: true 
+          math: true,
         });
-      } else if (part.includes('\\begin{align}')) {
+      } else if (part.includes("\\begin{align}")) {
         // align环境
         const mathContent = part.trim();
-        sections.push({ 
-          type: 'math-block', 
+        sections.push({
+          type: "math-block",
           content: mathContent,
-          math: true 
+          math: true,
         });
       } else {
         // 普通文本内容（包含行内公式和矩阵）
-        sections.push({ type: 'text', content: part });
+        sections.push({ type: "text", content: part });
       }
     });
-    
+
     return sections;
   }, []);
 
   const renderTextContent = useCallback((text: string) => {
     let html = text;
-    
+
     // 处理行内数学公式 $...$
     html = html.replace(/\$([^$]+)\$/g, (match, formula) => {
       try {
@@ -230,107 +236,153 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
         return match; // 如果渲染失败，保持原样
       }
     });
-    
+
     // 处理矩阵环境（作为行内元素）
-    html = html.replace(/\\begin\{pmatrix\}([\s\S]*?)\\end\{pmatrix\}/g, (match, matrixContent) => {
-      try {
-        const renderedMatrix = katex.renderToString(`\\begin{pmatrix}${matrixContent}\\end{pmatrix}`, {
-          throwOnError: false,
-          displayMode: false,
-        });
-        return `<span class="katex-inline">${renderedMatrix}</span>`;
-      } catch {
-        return match; // 如果渲染失败，保持原样
+    html = html.replace(
+      /\\begin\{pmatrix\}([\s\S]*?)\\end\{pmatrix\}/g,
+      (match, matrixContent) => {
+        try {
+          const renderedMatrix = katex.renderToString(
+            `\\begin{pmatrix}${matrixContent}\\end{pmatrix}`,
+            {
+              throwOnError: false,
+              displayMode: false,
+            }
+          );
+          return `<span class="katex-inline">${renderedMatrix}</span>`;
+        } catch {
+          return match; // 如果渲染失败，保持原样
+        }
       }
-    });
-    
+    );
+
     // 处理章节
-    html = html.replace(/\\section\{([^}]*)\}/g, '<h2 class="text-2xl font-semibold mt-6 mb-3">$1</h2>');
-    html = html.replace(/\\subsection\{([^}]*)\}/g, '<h3 class="text-xl font-medium mt-4 mb-2">$1</h3>');
-    html = html.replace(/\\subsubsection\{([^}]*)\}/g, '<h4 class="text-lg font-medium mt-3 mb-2">$1</h4>');
-    
+    html = html.replace(
+      /\\section\{([^}]*)\}/g,
+      '<h2 class="text-2xl font-semibold mt-6 mb-3">$1</h2>'
+    );
+    html = html.replace(
+      /\\subsection\{([^}]*)\}/g,
+      '<h3 class="text-xl font-medium mt-4 mb-2">$1</h3>'
+    );
+    html = html.replace(
+      /\\subsubsection\{([^}]*)\}/g,
+      '<h4 class="text-lg font-medium mt-3 mb-2">$1</h4>'
+    );
+
     // 处理文本格式
-    html = html.replace(/\\textbf\{([^}]*)\}/g, '<strong>$1</strong>');
-    html = html.replace(/\\textit\{([^}]*)\}/g, '<em>$1</em>');
-    html = html.replace(/\\underline\{([^}]*)\}/g, '<u>$1</u>');
-    html = html.replace(/\\texttt\{([^}]*)\}/g, '<code class="bg-muted px-1 rounded">$1</code>');
-    html = html.replace(/\\emph\{([^}]*)\}/g, '<em>$1</em>');
-    
+    html = html.replace(/\\textbf\{([^}]*)\}/g, "<strong>$1</strong>");
+    html = html.replace(/\\textit\{([^}]*)\}/g, "<em>$1</em>");
+    html = html.replace(/\\underline\{([^}]*)\}/g, "<u>$1</u>");
+    html = html.replace(
+      /\\texttt\{([^}]*)\}/g,
+      '<code class="bg-muted px-1 rounded">$1</code>'
+    );
+    html = html.replace(/\\emph\{([^}]*)\}/g, "<em>$1</em>");
+
     // 处理列表
-    html = html.replace(/\\begin\{itemize\}/g, '<ul class="list-disc list-inside ml-4 mb-3">');
-    html = html.replace(/\\end\{itemize\}/g, '</ul>');
-    html = html.replace(/\\begin\{enumerate\}/g, '<ol class="list-decimal list-inside ml-4 mb-3">');
-    html = html.replace(/\\end\{enumerate\}/g, '</ol>');
+    html = html.replace(
+      /\\begin\{itemize\}/g,
+      '<ul class="list-disc list-inside ml-4 mb-3">'
+    );
+    html = html.replace(/\\end\{itemize\}/g, "</ul>");
+    html = html.replace(
+      /\\begin\{enumerate\}/g,
+      '<ol class="list-decimal list-inside ml-4 mb-3">'
+    );
+    html = html.replace(/\\end\{enumerate\}/g, "</ol>");
     html = html.replace(/\\item\s+/g, '<li class="mb-1">');
-    
+
     // 处理代码块
-    html = html.replace(/\\begin\{verbatim\}([\s\S]*?)\\end\{verbatim\}/g, 
-      '<pre class="bg-muted p-3 rounded-md overflow-x-auto mb-3"><code>$1</code></pre>');
-    
+    html = html.replace(
+      /\\begin\{verbatim\}([\s\S]*?)\\end\{verbatim\}/g,
+      '<pre class="bg-muted p-3 rounded-md overflow-x-auto mb-3"><code>$1</code></pre>'
+    );
+
     // 处理表格
-    html = html.replace(/\\begin\{table\}[\s\S]*?\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}[\s\S]*?\\caption\{([^}]*)\}[\s\S]*?\\end\{table\}/g, 
+    html = html.replace(
+      /\\begin\{table\}[\s\S]*?\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}[\s\S]*?\\caption\{([^}]*)\}[\s\S]*?\\end\{table\}/g,
       (match: string, tableContent: string, caption: string) => {
         // 解析表格内容
-        const rows = tableContent.trim().split('\\\\').filter((row: string) => row.trim() && !row.trim().match(/^\\hline\s*$/));
-        
-        let tableHtml = '<div class="overflow-x-auto mb-4"><table class="border-collapse border border-border w-full">';
-        
+        const rows = tableContent
+          .trim()
+          .split("\\\\")
+          .filter(
+            (row: string) => row.trim() && !row.trim().match(/^\\hline\s*$/)
+          );
+
+        let tableHtml =
+          '<div class="overflow-x-auto mb-4"><table class="border-collapse border border-border w-full">';
+
         rows.forEach((row: string) => {
-          const cells = row.split('&').map((cell: string) => cell.trim().replace(/\\hline/g, ''));
-          tableHtml += '<tr>';
+          const cells = row
+            .split("&")
+            .map((cell: string) => cell.trim().replace(/\\hline/g, ""));
+          tableHtml += "<tr>";
           cells.forEach((cell: string) => {
             tableHtml += `<td class="border border-border px-2 py-1">${cell}</td>`;
           });
-          tableHtml += '</tr>';
+          tableHtml += "</tr>";
         });
-        
-        tableHtml += '</table>';
+
+        tableHtml += "</table>";
         if (caption) {
           tableHtml += `<p class="text-center mt-2 text-sm text-muted-foreground">${caption}</p>`;
         }
-        tableHtml += '</div>';
-        
+        tableHtml += "</div>";
+
         return tableHtml;
-      });
-    
+      }
+    );
+
     // 处理没有 caption 的表格
-    html = html.replace(/\\begin\{table\}[\s\S]*?\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}[\s\S]*?\\end\{table\}/g, 
+    html = html.replace(
+      /\\begin\{table\}[\s\S]*?\\begin\{tabular\}\{[^}]*\}([\s\S]*?)\\end\{tabular\}[\s\S]*?\\end\{table\}/g,
       (match: string, tableContent: string) => {
         // 解析表格内容
-        const rows = tableContent.trim().split('\\\\').filter((row: string) => row.trim() && !row.trim().match(/^\\hline\s*$/));
-        
-        let tableHtml = '<div class="overflow-x-auto mb-4"><table class="border-collapse border border-border w-full">';
-        
+        const rows = tableContent
+          .trim()
+          .split("\\\\")
+          .filter(
+            (row: string) => row.trim() && !row.trim().match(/^\\hline\s*$/)
+          );
+
+        let tableHtml =
+          '<div class="overflow-x-auto mb-4"><table class="border-collapse border border-border w-full">';
+
         rows.forEach((row: string) => {
-          const cells = row.split('&').map((cell: string) => cell.trim().replace(/\\hline/g, ''));
-          tableHtml += '<tr>';
+          const cells = row
+            .split("&")
+            .map((cell: string) => cell.trim().replace(/\\hline/g, ""));
+          tableHtml += "<tr>";
           cells.forEach((cell: string) => {
             tableHtml += `<td class="border border-border px-2 py-1">${cell}</td>`;
           });
-          tableHtml += '</tr>';
+          tableHtml += "</tr>";
         });
-        
-        tableHtml += '</table></div>';
-        
+
+        tableHtml += "</table></div>";
+
         return tableHtml;
-      });
-    
+      }
+    );
+
     // 处理段落
     html = html.replace(/\n\n/g, '</p><p class="mb-3">');
     html = html.replace(/^(.)/g, '<p class="mb-3">$1');
-    html = html + '</p>';
-    
+    html = html + "</p>";
+
     // 清理多余的标签
-    html = html.replace(/<p[^>]*><\/p>/g, '');
-    html = html.replace(/<p[^>]*>\s*<h/g, '<h');
-    html = html.replace(/<\/h([1-6])>\s*<\/p>/g, '</h$1>');
-    html = html.replace(/<p[^>]*>\s*<div/g, '<div');
-    html = html.replace(/<\/div>\s*<\/p>/g, '</div>');
-    html = html.replace(/<p[^>]*>\s*<ul/g, '<ul');
-    html = html.replace(/<\/ul>\s*<\/p>/g, '</ul>');
-    html = html.replace(/<p[^>]*>\s*<ol/g, '<ol');
-    html = html.replace(/<\/ol>\s*<\/p>/g, '</ol>');
-    
+    html = html.replace(/<p[^>]*><\/p>/g, "");
+    html = html.replace(/<p[^>]*>\s*<h/g, "<h");
+    html = html.replace(/<\/h([1-6])>\s*<\/p>/g, "</h$1>");
+    html = html.replace(/<p[^>]*>\s*<div/g, "<div");
+    html = html.replace(/<\/div>\s*<\/p>/g, "</div>");
+    html = html.replace(/<p[^>]*>\s*<ul/g, "<ul");
+    html = html.replace(/<\/ul>\s*<\/p>/g, "</ul>");
+    html = html.replace(/<p[^>]*>\s*<ol/g, "<ol");
+    html = html.replace(/<\/ol>\s*<\/p>/g, "</ol>");
+
     return html;
   }, []);
 
@@ -338,40 +390,44 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
     try {
       const sections = parseLaTeXContent(content);
       const renderedElements: React.ReactNode[] = [];
-      
+
       sections.forEach((section, index) => {
         const key = `section-${index}`;
-        
+
         switch (section.type) {
-          case 'title':
+          case "title":
             renderedElements.push(
               <h1 key={key} className="text-3xl font-bold text-center mb-4">
                 {section.content}
               </h1>
             );
             break;
-          case 'author':
+          case "author":
             renderedElements.push(
               <p key={key} className="text-center text-muted-foreground mb-2">
                 作者：{section.content}
               </p>
             );
             break;
-          case 'date':
+          case "date":
             renderedElements.push(
               <p key={key} className="text-center text-muted-foreground mb-6">
                 日期：{section.content}
               </p>
             );
             break;
-          case 'math-block':
+          case "math-block":
             try {
               const html = katex.renderToString(section.content, {
                 throwOnError: false,
                 displayMode: true,
               });
               renderedElements.push(
-                <div key={key} className="text-center mb-4" dangerouslySetInnerHTML={{ __html: html }} />
+                <div
+                  key={key}
+                  className="text-center mb-4"
+                  dangerouslySetInnerHTML={{ __html: html }}
+                />
               );
             } catch {
               renderedElements.push(
@@ -381,26 +437,23 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
               );
             }
             break;
-          case 'text':
+          case "text":
             if (section.content.trim()) {
               const textHtml = renderTextContent(section.content);
               renderedElements.push(
-                <div 
-                  key={key}
-                  dangerouslySetInnerHTML={{ __html: textHtml }}
-                />
+                <div key={key} dangerouslySetInnerHTML={{ __html: textHtml }} />
               );
             }
             break;
         }
       });
-      
+
       setRenderedContent(renderedElements);
     } catch {
       setRenderedContent([
         <div key="error" className="text-red-500">
           预览渲染错误
-        </div>
+        </div>,
       ]);
     }
   }, [content, parseLaTeXContent, renderTextContent]);
@@ -423,7 +476,7 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
             保存 (Ctrl+S)
           </button>
           <button
-            onClick={() => setContent('')}
+            onClick={() => setContent("")}
             className="px-3 py-1 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition-colors text-sm"
           >
             清空
@@ -432,22 +485,22 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
       </div>
 
       {/* 编辑器区域 */}
-      <div className="flex-1 flex min-h-0" style={{ height: '600px' }}>
+      <div className="flex-1 flex min-h-0" style={{ height: "600px" }}>
         {/* 编辑器 */}
         <div className="flex-1 border-r">
           <Editor
             height="100%"
             defaultLanguage="latex"
             value={content}
-            onChange={(value) => setContent(value || '')}
+            onChange={value => setContent(value || "")}
             theme="vs-dark"
             options={{
               fontSize: 14,
               fontFamily: '"Fira Code", "Monaco", "Consolas", monospace',
               minimap: { enabled: false },
               scrollBeyondLastLine: false,
-              wordWrap: 'on',
-              lineNumbers: 'on',
+              wordWrap: "on",
+              lineNumbers: "on",
               automaticLayout: true,
             }}
           />
@@ -456,9 +509,7 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
         {/* 预览区域 */}
         <div className="flex-1 p-4 overflow-y-auto bg-background">
           <div className="max-w-none prose prose-sm">
-            <div className="latex-preview">
-              {renderedContent}
-            </div>
+            <div className="latex-preview">{renderedContent}</div>
           </div>
         </div>
       </div>
@@ -466,4 +517,4 @@ LaTeX 是一个强大的排版系统，特别适合学术论文、技术文档�
   );
 };
 
-export default LaTeXEditor; 
+export default LaTeXEditor;

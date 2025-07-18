@@ -14,13 +14,18 @@ interface ChatMessageProps {
   showThinking?: boolean;
 }
 
-export function ChatMessageItem({ message, showThinking = true }: ChatMessageProps) {
+export function ChatMessageItem({
+  message,
+  showThinking = true,
+}: ChatMessageProps) {
   const isUser = message.role === "user";
   const isAssistant = message.role === "assistant";
   const isSystem = message.role === "system";
-  
+
   // 格式化时间
-  const formattedTime = format(new Date(message.createdAt), "HH:mm", { locale: zhCN });
+  const formattedTime = format(new Date(message.createdAt), "HH:mm", {
+    locale: zhCN,
+  });
 
   if (isSystem) {
     return (
@@ -46,31 +51,38 @@ export function ChatMessageItem({ message, showThinking = true }: ChatMessagePro
       )}
 
       <div className="flex flex-col max-w-[85%] sm:max-w-[80%]">
-        <div className={cn(
-          "text-[10px] sm:text-xs text-muted-foreground mb-1 opacity-0 group-hover:opacity-100 transition-opacity",
-          isUser ? "text-right" : "text-left"
-        )}>
+        <div
+          className={cn(
+            "text-[10px] sm:text-xs text-muted-foreground mb-1 opacity-0 group-hover:opacity-100 transition-opacity",
+            isUser ? "text-right" : "text-left"
+          )}
+        >
           <span className="inline-flex items-center gap-1">
             <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
             {formattedTime}
           </span>
         </div>
-        
+
         <Card
           className={cn(
-            isUser
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted"
+            isUser ? "bg-primary text-primary-foreground" : "bg-muted"
           )}
         >
-          <CardContent className={cn(
-            "p-2 sm:p-3",
-            isAssistant ? "prose prose-sm dark:prose-invert max-w-none" : ""
-          )}>
+          <CardContent
+            className={cn(
+              "p-2 sm:p-3",
+              isAssistant ? "prose prose-sm dark:prose-invert max-w-none" : ""
+            )}
+          >
             {isAssistant ? (
-              <ThinkContent content={message.content} showThinking={showThinking} />
+              <ThinkContent
+                content={message.content}
+                showThinking={showThinking}
+              />
             ) : (
-              <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
+              <p className="whitespace-pre-wrap text-sm sm:text-base">
+                {message.content}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -85,4 +97,4 @@ export function ChatMessageItem({ message, showThinking = true }: ChatMessagePro
       )}
     </div>
   );
-} 
+}

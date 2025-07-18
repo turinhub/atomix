@@ -15,7 +15,7 @@ export function TurnstileForm({ onVerificationSuccess }: TurnstileFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!token) {
       toast.error("请先完成人机验证");
       return;
@@ -67,4 +67,4 @@ export function TurnstileForm({ onVerificationSuccess }: TurnstileFormProps) {
       </Button>
     </form>
   );
-} 
+}

@@ -10,29 +10,35 @@ import dynamic from "next/dynamic";
 
 // 动态导入视频播放器组件，禁用 SSR
 const VideoPlayer = dynamic(
-  () => import("@/components/reader/VideoPlayer").then((mod) => mod.default.VideoPlayer),
-  { 
+  () =>
+    import("@/components/reader/VideoPlayer").then(
+      mod => mod.default.VideoPlayer
+    ),
+  {
     ssr: false,
     loading: () => (
       <div className="flex justify-center items-center h-[500px] w-full">
         <Loader2 className="h-8 w-8 animate-spin" />
         <span className="ml-2">加载视频播放器...</span>
       </div>
-    )
+    ),
   }
 );
 
 // 动态导入简单视频播放器组件，禁用 SSR
 const SimpleVideoPlayer = dynamic(
-  () => import("@/components/reader/SimpleVideoPlayer").then((mod) => mod.default.SimpleVideoPlayer),
-  { 
+  () =>
+    import("@/components/reader/SimpleVideoPlayer").then(
+      mod => mod.default.SimpleVideoPlayer
+    ),
+  {
     ssr: false,
     loading: () => (
       <div className="flex justify-center items-center h-[500px] w-full">
         <Loader2 className="h-8 w-8 animate-spin" />
         <span className="ml-2">加载简单视频播放器...</span>
       </div>
-    )
+    ),
   }
 );
 
@@ -44,22 +50,24 @@ export default function VideoReaderPage() {
   const [useSimplePlayer, setUseSimplePlayer] = useState<boolean>(false);
 
   // 默认视频示例
-  const defaultVideoUrl = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
-  const defaultVideoPoster = "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg";
+  const defaultVideoUrl =
+    "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
+  const defaultVideoPoster =
+    "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg";
 
   // 切换播放器类型
   const togglePlayer = () => {
     setUseSimplePlayer(!useSimplePlayer);
-    toast.success(`已切换到${!useSimplePlayer ? '简单' : '高级'}播放器`);
+    toast.success(`已切换到${!useSimplePlayer ? "简单" : "高级"}播放器`);
   };
 
   // 加载默认视频
   const loadDefaultVideo = () => {
     setIsLoading(true);
-    
+
     // 检查默认视频是否可访问（仅在客户端环境）
-    if (typeof window !== 'undefined') {
-      fetch(defaultVideoUrl, { method: 'HEAD' })
+    if (typeof window !== "undefined") {
+      fetch(defaultVideoUrl, { method: "HEAD" })
         .then(response => {
           if (response.ok) {
             setCurrentVideo(defaultVideoUrl);
@@ -118,7 +126,7 @@ export default function VideoReaderPage() {
                 type="text"
                 placeholder="输入视频 URL"
                 value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
+                onChange={e => setVideoUrl(e.target.value)}
                 className="flex-1"
               />
               <Button type="submit" disabled={isLoading}>
@@ -153,13 +161,9 @@ export default function VideoReaderPage() {
           </TabsContent>
         </Tabs>
 
-        <Button 
-          variant="outline" 
-          onClick={togglePlayer}
-          className="ml-2"
-        >
+        <Button variant="outline" onClick={togglePlayer} className="ml-2">
           <SwitchCamera className="h-4 w-4 mr-2" />
-          切换到{useSimplePlayer ? '高级' : '简单'}播放器
+          切换到{useSimplePlayer ? "高级" : "简单"}播放器
         </Button>
       </div>
 
@@ -169,14 +173,18 @@ export default function VideoReaderPage() {
           <span className="ml-2">加载视频中...</span>
         </div>
       ) : useSimplePlayer ? (
-        <SimpleVideoPlayer 
-          src={currentVideo || undefined} 
-          poster={currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined}
+        <SimpleVideoPlayer
+          src={currentVideo || undefined}
+          poster={
+            currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined
+          }
         />
       ) : (
-        <VideoPlayer 
-          src={currentVideo || undefined} 
-          poster={currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined}
+        <VideoPlayer
+          src={currentVideo || undefined}
+          poster={
+            currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined
+          }
         />
       )}
 
@@ -192,4 +200,4 @@ export default function VideoReaderPage() {
       </div>
     </div>
   );
-} 
+}

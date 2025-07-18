@@ -1,12 +1,20 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Table } from "lucide-react";
 import { toolCategories } from "@/lib/routes";
 
 export default function OfficePage() {
   // 找到办公工具分类
-  const officeCategory = toolCategories.find(category => category.url === "/office");
-  
+  const officeCategory = toolCategories.find(
+    category => category.url === "/office"
+  );
+
   if (!officeCategory) {
     return <div>分类未找到</div>;
   }
@@ -25,7 +33,7 @@ export default function OfficePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {officeCategory.tools.map((tool) => (
+          {officeCategory.tools.map(tool => (
             <Link key={tool.path} href={tool.url}>
               <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer border-2 hover:border-primary/20">
                 <CardHeader>
@@ -52,4 +60,4 @@ export default function OfficePage() {
       </div>
     </div>
   );
-} 
+}

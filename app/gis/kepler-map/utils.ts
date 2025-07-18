@@ -3,58 +3,106 @@ export const beijingDistrictsData = {
   fields: [
     { name: "name", format: "", type: "string" },
     { name: "geometry", format: "", type: "geojson" },
-    { name: "value", format: "", type: "integer" }
+    { name: "value", format: "", type: "integer" },
   ],
   rows: [
     [
-      "东城区", 
+      "东城区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.4208, 39.9289], [116.4390, 39.9289], [116.4390, 39.9080], [116.4208, 39.9080], [116.4208, 39.9289]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.4208, 39.9289],
+            [116.439, 39.9289],
+            [116.439, 39.908],
+            [116.4208, 39.908],
+            [116.4208, 39.9289],
+          ],
+        ],
       },
-      85
+      85,
     ],
     [
-      "西城区", 
+      "西城区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.3660, 39.9289], [116.4100, 39.9289], [116.4100, 39.9080], [116.3660, 39.9080], [116.3660, 39.9289]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.366, 39.9289],
+            [116.41, 39.9289],
+            [116.41, 39.908],
+            [116.366, 39.908],
+            [116.366, 39.9289],
+          ],
+        ],
       },
-      92
+      92,
     ],
     [
-      "朝阳区", 
+      "朝阳区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.4650, 40.0000], [116.5400, 40.0000], [116.5400, 39.9200], [116.4650, 39.9200], [116.4650, 40.0000]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.465, 40.0],
+            [116.54, 40.0],
+            [116.54, 39.92],
+            [116.465, 39.92],
+            [116.465, 40.0],
+          ],
+        ],
       },
-      76
+      76,
     ],
     [
-      "海淀区", 
+      "海淀区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.2800, 40.0300], [116.3600, 40.0300], [116.3600, 39.9500], [116.2800, 39.9500], [116.2800, 40.0300]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.28, 40.03],
+            [116.36, 40.03],
+            [116.36, 39.95],
+            [116.28, 39.95],
+            [116.28, 40.03],
+          ],
+        ],
       },
-      88
+      88,
     ],
     [
-      "丰台区", 
+      "丰台区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.2800, 39.8800], [116.3600, 39.8800], [116.3600, 39.8200], [116.2800, 39.8200], [116.2800, 39.8800]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.28, 39.88],
+            [116.36, 39.88],
+            [116.36, 39.82],
+            [116.28, 39.82],
+            [116.28, 39.88],
+          ],
+        ],
       },
-      67
+      67,
     ],
     [
-      "石景山区", 
+      "石景山区",
       {
-        "type": "Polygon",
-        "coordinates": [[[116.1800, 39.9300], [116.2600, 39.9300], [116.2600, 39.8800], [116.1800, 39.8800], [116.1800, 39.9300]]]
+        type: "Polygon",
+        coordinates: [
+          [
+            [116.18, 39.93],
+            [116.26, 39.93],
+            [116.26, 39.88],
+            [116.18, 39.88],
+            [116.18, 39.93],
+          ],
+        ],
       },
-      72
-    ]
-  ]
+      72,
+    ],
+  ],
 };
 
 // 模拟北京地区POI数据
@@ -64,7 +112,7 @@ export const beijingPOIData = {
     { name: "longitude", format: "", type: "real" },
     { name: "latitude", format: "", type: "real" },
     { name: "category", format: "", type: "string" },
-    { name: "rating", format: "", type: "real" }
+    { name: "rating", format: "", type: "real" },
   ],
   rows: [
     ["故宫博物院", 116.3972, 39.9154, "景点", 4.9],
@@ -81,8 +129,8 @@ export const beijingPOIData = {
     ["北京西站", 116.3227, 39.8954, "交通", 4.3],
     ["后海", 116.3883, 39.9442, "休闲", 4.6],
     ["798艺术区", 116.4948, 39.9847, "艺术", 4.5],
-    ["朝阳公园", 116.4836, 39.9421, "公园", 4.4]
-  ]
+    ["朝阳公园", 116.4836, 39.9421, "公园", 4.4],
+  ],
 };
 
 // 模拟北京到其他城市的流向数据
@@ -94,7 +142,7 @@ export const beijingFlowData = {
     { name: "dest_city", format: "", type: "string" },
     { name: "dest_lon", format: "", type: "real" },
     { name: "dest_lat", format: "", type: "real" },
-    { name: "count", format: "", type: "integer" }
+    { name: "count", format: "", type: "integer" },
   ],
   rows: [
     ["北京", 116.4074, 39.9042, "上海", 121.4737, 31.2304, 1250],
@@ -104,10 +152,10 @@ export const beijingFlowData = {
     ["北京", 116.4074, 39.9042, "杭州", 120.1551, 30.2741, 680],
     ["北京", 116.4074, 39.9042, "武汉", 114.3055, 30.5928, 580],
     ["北京", 116.4074, 39.9042, "西安", 108.9402, 34.3415, 520],
-    ["北京", 116.4074, 39.9042, "重庆", 106.5516, 29.5630, 490],
+    ["北京", 116.4074, 39.9042, "重庆", 106.5516, 29.563, 490],
     ["北京", 116.4074, 39.9042, "南京", 118.7969, 32.0603, 470],
-    ["北京", 116.4074, 39.9042, "天津", 117.2010, 39.0842, 420]
-  ]
+    ["北京", 116.4074, 39.9042, "天津", 117.201, 39.0842, 420],
+  ],
 };
 
 // 为 Kepler.gl 准备自定义配置
@@ -127,7 +175,7 @@ export const customMapConfig = {
             columns: {
               lat: "latitude",
               lng: "longitude",
-              altitude: null
+              altitude: null,
             },
             isVisible: true,
             visConfig: {
@@ -140,24 +188,31 @@ export const customMapConfig = {
                 name: "Global Warming",
                 type: "sequential",
                 category: "Uber",
-                colors: ["#5A1846", "#900C3F", "#C70039", "#E3611C", "#F1920E", "#FFC300"]
+                colors: [
+                  "#5A1846",
+                  "#900C3F",
+                  "#C70039",
+                  "#E3611C",
+                  "#F1920E",
+                  "#FFC300",
+                ],
               },
               radiusRange: [0, 50],
-              "hi-precision": false
-            }
+              "hi-precision": false,
+            },
           },
           visualChannels: {
             colorField: {
               name: "rating",
-              type: "real"
+              type: "real",
             },
             colorScale: "quantile",
             sizeField: {
               name: "rating",
-              type: "real"
+              type: "real",
             },
-            sizeScale: "sqrt"
-          }
+            sizeScale: "sqrt",
+          },
         },
         {
           id: "flow",
@@ -170,7 +225,7 @@ export const customMapConfig = {
               lat0: "origin_lat",
               lng0: "origin_lon",
               lat1: "dest_lat",
-              lng1: "dest_lon"
+              lng1: "dest_lon",
             },
             isVisible: true,
             visConfig: {
@@ -180,21 +235,42 @@ export const customMapConfig = {
                 name: "Uber Viz Qualitative 4",
                 type: "qualitative",
                 category: "Uber",
-                colors: ["#12939A", "#DDB27C", "#88572C", "#FF991F", "#F15C17", "#223F9A", "#DA70BF", "#125C77", "#4DC19C", "#776E57", "#17B8BE", "#F6D18A", "#B7885E", "#FFCB99", "#F89570", "#829AE3", "#E79FD5", "#1E96BE", "#89DAC1", "#B3AD9E"]
+                colors: [
+                  "#12939A",
+                  "#DDB27C",
+                  "#88572C",
+                  "#FF991F",
+                  "#F15C17",
+                  "#223F9A",
+                  "#DA70BF",
+                  "#125C77",
+                  "#4DC19C",
+                  "#776E57",
+                  "#17B8BE",
+                  "#F6D18A",
+                  "#B7885E",
+                  "#FFCB99",
+                  "#F89570",
+                  "#829AE3",
+                  "#E79FD5",
+                  "#1E96BE",
+                  "#89DAC1",
+                  "#B3AD9E",
+                ],
               },
               sizeRange: [0, 10],
-              targetColor: null
+              targetColor: null,
             },
             visualChannels: {
               colorField: null,
               colorScale: "quantize",
               sizeField: {
                 name: "count",
-                type: "integer"
+                type: "integer",
               },
-              sizeScale: "linear"
-            }
-          }
+              sizeScale: "linear",
+            },
+          },
         },
         {
           id: "districts",
@@ -204,7 +280,7 @@ export const customMapConfig = {
             label: "北京行政区域",
             color: [241, 92, 23],
             columns: {
-              geojson: "geometry"
+              geojson: "geometry",
             },
             isVisible: true,
             visConfig: {
@@ -216,13 +292,27 @@ export const customMapConfig = {
                 name: "Global Warming",
                 type: "sequential",
                 category: "Uber",
-                colors: ["#5A1846", "#900C3F", "#C70039", "#E3611C", "#F1920E", "#FFC300"]
+                colors: [
+                  "#5A1846",
+                  "#900C3F",
+                  "#C70039",
+                  "#E3611C",
+                  "#F1920E",
+                  "#FFC300",
+                ],
               },
               strokeColorRange: {
                 name: "Global Warming",
                 type: "sequential",
                 category: "Uber",
-                colors: ["#5A1846", "#900C3F", "#C70039", "#E3611C", "#F1920E", "#FFC300"]
+                colors: [
+                  "#5A1846",
+                  "#900C3F",
+                  "#C70039",
+                  "#E3611C",
+                  "#F1920E",
+                  "#FFC300",
+                ],
               },
               radius: 10,
               sizeRange: [0, 10],
@@ -232,12 +322,12 @@ export const customMapConfig = {
               stroked: true,
               filled: true,
               enable3d: false,
-              wireframe: false
+              wireframe: false,
             },
             visualChannels: {
               colorField: {
                 name: "value",
-                type: "integer"
+                type: "integer",
               },
               colorScale: "quantile",
               sizeField: null,
@@ -247,10 +337,10 @@ export const customMapConfig = {
               heightField: null,
               heightScale: "linear",
               radiusField: null,
-              radiusScale: "linear"
-            }
-          }
-        }
+              radiusScale: "linear",
+            },
+          },
+        },
       ],
       interactionConfig: {
         tooltip: {
@@ -258,63 +348,63 @@ export const customMapConfig = {
             beijing_poi: [
               {
                 name: "name",
-                format: null
+                format: null,
               },
               {
                 name: "category",
-                format: null
+                format: null,
               },
               {
                 name: "rating",
-                format: null
-              }
+                format: null,
+              },
             ],
             beijing_flow: [
               {
                 name: "origin_city",
-                format: null
+                format: null,
               },
               {
                 name: "dest_city",
-                format: null
+                format: null,
               },
               {
                 name: "count",
-                format: null
-              }
+                format: null,
+              },
             ],
             beijing_districts: [
               {
                 name: "name",
-                format: null
+                format: null,
               },
               {
                 name: "value",
-                format: null
-              }
-            ]
+                format: null,
+              },
+            ],
           },
           compareMode: false,
           compareType: "absolute",
-          enabled: true
+          enabled: true,
         },
         brush: {
           size: 0.5,
-          enabled: false
+          enabled: false,
         },
         geocoder: {
-          enabled: false
+          enabled: false,
         },
         coordinate: {
-          enabled: false
-        }
+          enabled: false,
+        },
       },
       layerBlending: "normal",
       splitMaps: [],
       animationConfig: {
         currentTime: null,
-        speed: 1
-      }
+        speed: 1,
+      },
     },
     mapState: {
       bearing: 0,
@@ -323,7 +413,7 @@ export const customMapConfig = {
       longitude: 116.4074,
       pitch: 0,
       zoom: 9,
-      isSplit: false
+      isSplit: false,
     },
     mapStyle: {
       styleType: "dark",
@@ -335,10 +425,10 @@ export const customMapConfig = {
         building: true,
         water: true,
         land: true,
-        "3d building": false
+        "3d building": false,
       },
       threeDBuildingColor: [9.196, 9.196, 9.196],
-      mapStyles: {}
-    }
-  }
-}; 
+      mapStyles: {},
+    },
+  },
+};

@@ -1,19 +1,19 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import MDEditor from '@uiw/react-md-editor';
-import '@uiw/react-md-editor/markdown-editor.css';
-import { getCodeString } from 'rehype-rewrite';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
+import React, { useState, useEffect, useCallback } from "react";
+import MDEditor from "@uiw/react-md-editor";
+import "@uiw/react-md-editor/markdown-editor.css";
+import { getCodeString } from "rehype-rewrite";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import katex from "katex";
+import "katex/dist/katex.min.css";
 
 interface MarkdownEditorProps {
   className?: string;
 }
 
-const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ className = '' }) => {
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ className = "" }) => {
   const [value, setValue] = useState<string>(`# 欢迎使用 Markdown 编辑器
 
 这是一个功能强大的在线 Markdown 编辑器，支持实时预览和数学公式渲染。
@@ -163,7 +163,7 @@ $$
 
   // 从 localStorage 加载保存的内容
   useEffect(() => {
-    const savedContent = localStorage.getItem('markdown-editor-content');
+    const savedContent = localStorage.getItem("markdown-editor-content");
     if (savedContent) {
       setValue(savedContent);
     }
@@ -171,23 +171,23 @@ $$
 
   // 保存内容到 localStorage
   const handleSave = useCallback(() => {
-    localStorage.setItem('markdown-editor-content', value || '');
+    localStorage.setItem("markdown-editor-content", value || "");
     // 这里可以添加保存成功的提示
-    console.log('内容已保存到本地存储');
+    console.log("内容已保存到本地存储");
   }, [value]);
 
   // 监听 Ctrl+S 保存快捷键
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         handleSave();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [value, handleSave]);
 
@@ -195,66 +195,94 @@ $$
     <div className={`w-full h-full ${className}`}>
       <MDEditor
         value={value}
-        onChange={(val) => setValue(val || '')}
+        onChange={val => setValue(val || "")}
         height={600}
         preview="edit"
         hideToolbar={false}
         data-color-mode="light"
         textareaProps={{
-          placeholder: '请输入 Markdown 内容...',
+          placeholder: "请输入 Markdown 内容...",
           style: {
             fontSize: 14,
-            fontFamily: '"Fira Code", "Monaco", "Consolas", monospace'
-          }
+            fontFamily: '"Fira Code", "Monaco", "Consolas", monospace',
+          },
         }}
         previewOptions={{
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
           components: {
             code: ({ children = [], className, ...props }) => {
-              const txt = Array.isArray(children) ? children[0] || '' : children || '';
-              
+              const txt = Array.isArray(children)
+                ? children[0] || ""
+                : children || "";
+
               // 处理行内数学公式 $...$
-              if (typeof txt === 'string' && /^\$\$(.*)\$\$/.test(txt)) {
-                const html = katex.renderToString(txt.replace(/^\$\$(.*)\$\$/, '$1'), {
-                  throwOnError: false,
-                  displayMode: true,
-                });
-                return <div style={{ textAlign: 'center', margin: '1em 0' }} dangerouslySetInnerHTML={{ __html: html }} />;
+              if (typeof txt === "string" && /^\$\$(.*)\$\$/.test(txt)) {
+                const html = katex.renderToString(
+                  txt.replace(/^\$\$(.*)\$\$/, "$1"),
+                  {
+                    throwOnError: false,
+                    displayMode: true,
+                  }
+                );
+                return (
+                  <div
+                    style={{ textAlign: "center", margin: "1em 0" }}
+                    dangerouslySetInnerHTML={{ __html: html }}
+                  />
+                );
               }
-              
+
               // 处理代码块中的 KaTeX - 使用 getCodeString 处理节点
-              const code = props.node && props.node.children ? getCodeString(props.node.children) : txt;
+              const code =
+                props.node && props.node.children
+                  ? getCodeString(props.node.children)
+                  : txt;
               if (
-                typeof code === 'string' &&
-                typeof className === 'string' &&
+                typeof code === "string" &&
+                typeof className === "string" &&
                 /^language-katex/.test(className.toLowerCase())
               ) {
                 // 检查是否包含需要块级显示的环境
-                const isDisplayMode = /\\begin\{(align|equation|gather|split|multline|alignat)\}/.test(code);
-                
+                const isDisplayMode =
+                  /\\begin\{(align|equation|gather|split|multline|alignat)\}/.test(
+                    code
+                  );
+
                 const html = katex.renderToString(code, {
                   throwOnError: false,
                   displayMode: isDisplayMode,
                 });
-                
+
                 if (isDisplayMode) {
-                  return <div style={{ textAlign: 'center', margin: '1em 0', fontSize: '120%' }} dangerouslySetInnerHTML={{ __html: html }} />;
+                  return (
+                    <div
+                      style={{
+                        textAlign: "center",
+                        margin: "1em 0",
+                        fontSize: "120%",
+                      }}
+                      dangerouslySetInnerHTML={{ __html: html }}
+                    />
+                  );
                 } else {
-                  return <span style={{ fontSize: '110%' }} dangerouslySetInnerHTML={{ __html: html }} />;
+                  return (
+                    <span
+                      style={{ fontSize: "110%" }}
+                      dangerouslySetInnerHTML={{ __html: html }}
+                    />
+                  );
                 }
               }
-              
+
               return <code className={String(className)}>{children}</code>;
             },
           },
         }}
       />
-      
+
       <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
-        <div>
-          字符数: {value?.length || 0}
-        </div>
+        <div>字符数: {value?.length || 0}</div>
         <div className="flex gap-2">
           <button
             onClick={handleSave}
@@ -263,7 +291,7 @@ $$
             保存 (Ctrl+S)
           </button>
           <button
-            onClick={() => setValue('')}
+            onClick={() => setValue("")}
             className="px-3 py-1 bg-destructive text-destructive-foreground rounded hover:bg-destructive/90 transition-colors"
           >
             清空
@@ -274,4 +302,4 @@ $$
   );
 };
 
-export default MarkdownEditor; 
+export default MarkdownEditor;

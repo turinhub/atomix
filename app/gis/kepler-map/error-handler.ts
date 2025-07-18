@@ -2,18 +2,21 @@
 // 用于过滤 kepler.gl 组件中因依赖库兼容性问题导致的非关键警告
 
 export function setupErrorHandler() {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     // 保存原始的控制台错误方法
     const originalConsoleError = console.error;
 
     // 过滤掉特定的错误信息
-    console.error = function(...args: unknown[]) {
+    console.error = function (...args: unknown[]) {
       // 过滤掉 findDOMNode 和 element.ref 相关警告
-      if (args[0] && typeof args[0] === 'string' && 
-         (args[0].includes('findDOMNode') || 
-          args[0].includes('react-sortable-hoc') ||
-          args[0].includes('element.ref was removed') ||
-          args[0].includes('Accessing element.ref'))) {
+      if (
+        args[0] &&
+        typeof args[0] === "string" &&
+        (args[0].includes("findDOMNode") ||
+          args[0].includes("react-sortable-hoc") ||
+          args[0].includes("element.ref was removed") ||
+          args[0].includes("Accessing element.ref"))
+      ) {
         // 忽略这些特定警告
         return;
       }
@@ -29,4 +32,4 @@ export function setupErrorHandler() {
   }
 
   return () => {}; // 空清理函数用于 SSR
-} 
+}

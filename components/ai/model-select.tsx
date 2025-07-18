@@ -42,7 +42,8 @@ export function ModelSelect({
           className="w-full justify-between"
         >
           {selectedModel
-            ? models.find((model) => model.id === selectedModel)?.name || selectedModel
+            ? models.find(model => model.id === selectedModel)?.name ||
+              selectedModel
             : "选择模型..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -52,7 +53,7 @@ export function ModelSelect({
           <CommandInput placeholder="搜索模型..." />
           <CommandEmpty>未找到模型</CommandEmpty>
           <CommandGroup>
-            {models.map((model) => (
+            {models.map(model => (
               <CommandItem
                 key={model.id}
                 value={model.id}
@@ -82,4 +83,4 @@ export function ModelSelect({
       </PopoverContent>
     </Popover>
   );
-} 
+}

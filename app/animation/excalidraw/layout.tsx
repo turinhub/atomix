@@ -11,4 +11,4 @@ export default function ExcalidrawLayout({
   children: React.ReactNode;
 }) {
   return children;
-} 
+}

@@ -5,14 +5,10 @@ export const metadata: Metadata = {
   description: "人工智能对话和交互工具",
 };
 
-export default function AILayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AILayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex-1">{children}</div>
     </div>
   );
-} 
+}

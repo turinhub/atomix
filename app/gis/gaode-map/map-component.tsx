@@ -1,108 +1,108 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { Scene, PointLayer, HeatmapLayer, ILayer } from '@antv/l7'
-import { GaodeMap } from '@antv/l7-maps'
+import { useEffect, useRef, useState } from "react";
+import { Scene, PointLayer, HeatmapLayer, ILayer } from "@antv/l7";
+import { GaodeMap } from "@antv/l7-maps";
 
 // 地图API密钥
-const AMAP_API_KEY = process.env.NEXT_PUBLIC_AMAP_API_KEY || ""
+const AMAP_API_KEY = process.env.NEXT_PUBLIC_AMAP_API_KEY || "";
 
 // 定义热力图数据点类型
 type HeatmapDataPoint = {
-  lng: number
-  lat: number
-  count: number
-}
+  lng: number;
+  lat: number;
+  count: number;
+};
 
 // 定义排放源数据类型
 type EmissionPoint = {
-  name: string
-  lnglat: [number, number]
-  value: number
-  type: string
-}
+  name: string;
+  lnglat: [number, number];
+  value: number;
+  type: string;
+};
 
 // 组件Props类型定义
 type MapComponentProps = {
-  visualizationType: string
-  filteredData: EmissionPoint[]
-  generateHeatmapData: () => HeatmapDataPoint[]
-}
+  visualizationType: string;
+  filteredData: EmissionPoint[];
+  generateHeatmapData: () => HeatmapDataPoint[];
+};
 
-export default function GaodeMapComponent({ 
-  visualizationType, 
+export default function GaodeMapComponent({
+  visualizationType,
   filteredData,
-  generateHeatmapData
+  generateHeatmapData,
 }: MapComponentProps) {
-  const mapRef = useRef<HTMLDivElement>(null)
-  const sceneRef = useRef<Scene | null>(null)
-  const [mapLoaded, setMapLoaded] = useState<boolean>(false)
-  const layersRef = useRef<ILayer[]>([]) // 用于追踪添加的图层
+  const mapRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<Scene | null>(null);
+  const [mapLoaded, setMapLoaded] = useState<boolean>(false);
+  const layersRef = useRef<ILayer[]>([]); // 用于追踪添加的图层
 
   // 初始化地图
   useEffect(() => {
-    if (!mapRef.current) return
+    if (!mapRef.current) return;
 
     try {
       // 创建高德地图实例
       const mapInstance = new GaodeMap({
-        style: 'normal',
+        style: "normal",
         center: [108.9, 34.2],
         zoom: 3,
         pitch: visualizationType === "3dcolumn" ? 45 : 0,
-        token: AMAP_API_KEY
-      })
-      
+        token: AMAP_API_KEY,
+      });
+
       // 创建场景
       const scene = new Scene({
         id: mapRef.current,
         map: mapInstance,
-        logoVisible: false
-      })
+        logoVisible: false,
+      });
 
-      sceneRef.current = scene
+      sceneRef.current = scene;
 
       // 设置场景加载事件
-      scene.on('loaded', () => {
-        setMapLoaded(true)
-        console.log('高德地图加载完成')
-        
+      scene.on("loaded", () => {
+        setMapLoaded(true);
+        console.log("高德地图加载完成");
+
         // 添加样式表以修复地图显示问题
-        addMapFixStylesheet()
-      })
+        addMapFixStylesheet();
+      });
 
       return () => {
         // 清理逻辑，确保在组件卸载时正确销毁地图
-        clearAllLayers()
+        clearAllLayers();
         if (sceneRef.current) {
           try {
-            sceneRef.current.destroy()
-            
+            sceneRef.current.destroy();
+
             // 移除样式表
-            removeMapFixStylesheet()
+            removeMapFixStylesheet();
           } catch (e) {
-            console.warn("销毁地图时出错:", e)
+            console.warn("销毁地图时出错:", e);
           }
-          sceneRef.current = null
+          sceneRef.current = null;
         }
-        setMapLoaded(false)
-        layersRef.current = []
-      }
+        setMapLoaded(false);
+        layersRef.current = [];
+      };
     } catch (error) {
-      console.error("高德地图初始化失败:", error)
+      console.error("高德地图初始化失败:", error);
     }
-  // 监听visualizationType的变化
-  }, [visualizationType])
+    // 监听visualizationType的变化
+  }, [visualizationType]);
 
   // 添加修复地图显示的CSS样式
   const addMapFixStylesheet = () => {
-    const styleId = 'gaode-map-fix-styles'
-    
+    const styleId = "gaode-map-fix-styles";
+
     // 如果已存在则不重复添加
-    if (document.getElementById(styleId)) return
-    
-    const styleElement = document.createElement('style')
-    styleElement.id = styleId
+    if (document.getElementById(styleId)) return;
+
+    const styleElement = document.createElement("style");
+    styleElement.id = styleId;
     styleElement.textContent = `
       .gaode-map-container {
         position: relative !important;
@@ -124,39 +124,39 @@ export default function GaodeMapComponent({
         top: 0 !important;
         left: 0 !important;
       }
-    `
-    
-    document.head.appendChild(styleElement)
-  }
-  
+    `;
+
+    document.head.appendChild(styleElement);
+  };
+
   // 移除修复样式
   const removeMapFixStylesheet = () => {
-    const styleEl = document.getElementById('gaode-map-fix-styles')
+    const styleEl = document.getElementById("gaode-map-fix-styles");
     if (styleEl) {
-      styleEl.remove()
+      styleEl.remove();
     }
-  }
+  };
 
   // 清除所有图层的辅助函数
   const clearAllLayers = () => {
-    if (!sceneRef.current) return
-    
+    if (!sceneRef.current) return;
+
     try {
       // 移除所有已添加的图层
       layersRef.current.forEach(layer => {
         try {
           if (sceneRef.current) {
-            sceneRef.current.removeLayer(layer)
+            sceneRef.current.removeLayer(layer);
           }
         } catch (e) {
-          console.warn("移除图层时出错:", e)
+          console.warn("移除图层时出错:", e);
         }
-      })
-      layersRef.current = []
+      });
+      layersRef.current = [];
     } catch (error) {
-      console.error("清除图层时出错:", error)
+      console.error("清除图层时出错:", error);
     }
-  }
+  };
 
   // 更新地图样式
   useEffect(() => {
@@ -164,10 +164,10 @@ export default function GaodeMapComponent({
       try {
         // 更新可视化
         const scene = sceneRef.current;
-        
+
         // 先清除所有现有图层
         clearAllLayers();
-        
+
         // 根据类型添加新图层
         let newLayer;
         if (visualizationType === "point") {
@@ -177,7 +177,7 @@ export default function GaodeMapComponent({
         } else if (visualizationType === "3dcolumn") {
           newLayer = add3DColumnLayer(scene);
         }
-        
+
         // 如果添加了新图层，记录到引用中
         if (newLayer) {
           layersRef.current.push(newLayer);
@@ -193,55 +193,49 @@ export default function GaodeMapComponent({
     if (mapLoaded && sceneRef.current) {
       try {
         // 更新地图的俯仰角度
-        sceneRef.current.setPitch(visualizationType === "3dcolumn" ? 45 : 0)
+        sceneRef.current.setPitch(visualizationType === "3dcolumn" ? 45 : 0);
       } catch (error) {
-        console.error("更新地图视角时出错:", error)
+        console.error("更新地图视角时出错:", error);
       }
     }
-  }, [visualizationType, mapLoaded])
+  }, [visualizationType, mapLoaded]);
 
   // 添加点图层
   const addPointLayer = (scene: Scene) => {
     const pointLayer = new PointLayer({
-      name: "pointLayer"
+      name: "pointLayer",
     })
       .source(filteredData, {
         parser: {
           type: "json",
-          coordinates: "lnglat"
-        }
+          coordinates: "lnglat",
+        },
       })
       .shape("circle")
       .size("value", [5, 25])
-      .color("value", [
-        "#feedde",
-        "#fdbe85",
-        "#fd8d3c",
-        "#e6550d",
-        "#a63603"
-      ])
+      .color("value", ["#feedde", "#fdbe85", "#fd8d3c", "#e6550d", "#a63603"])
       .style({
         opacity: 0.8,
         strokeWidth: 1,
-        stroke: "#fff"
-      })
-      
-    scene.addLayer(pointLayer)
-    return pointLayer
-  }
+        stroke: "#fff",
+      });
+
+    scene.addLayer(pointLayer);
+    return pointLayer;
+  };
 
   // 添加热力图层
   const addHeatmapLayer = (scene: Scene) => {
-    const heatmapData = generateHeatmapData()
+    const heatmapData = generateHeatmapData();
     const heatmapLayer = new HeatmapLayer({
-      name: "heatmapLayer"
+      name: "heatmapLayer",
     })
       .source(heatmapData, {
         parser: {
           type: "json",
           x: "lng",
-          y: "lat"
-        }
+          y: "lat",
+        },
       })
       .shape("heatmap")
       .size("count", [0, 1.0])
@@ -254,7 +248,7 @@ export default function GaodeMapComponent({
         "#DEBB26",
         "#F49D1A",
         "#E4632D",
-        "#BC2025"
+        "#BC2025",
       ])
       .style({
         intensity: 2,
@@ -270,55 +264,49 @@ export default function GaodeMapComponent({
             "#DEBB26",
             "#F49D1A",
             "#E4632D",
-            "#BC2025"
+            "#BC2025",
           ],
-          positions: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0]
-        }
-      })
-      
-    scene.addLayer(heatmapLayer)
-    return heatmapLayer
-  }
+          positions: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.0],
+        },
+      });
+
+    scene.addLayer(heatmapLayer);
+    return heatmapLayer;
+  };
 
   // 添加3D柱状图层
   const add3DColumnLayer = (scene: Scene) => {
     const columnLayer = new PointLayer({
-      name: "3dColumnLayer"
+      name: "3dColumnLayer",
     })
       .source(filteredData, {
         parser: {
           type: "json",
-          coordinates: "lnglat"
-        }
+          coordinates: "lnglat",
+        },
       })
       .shape("cylinder")
       .size("value", (val: number) => [4, 4, val / 10])
-      .color("value", [
-        "#feedde",
-        "#fdbe85",
-        "#fd8d3c",
-        "#e6550d",
-        "#a63603"
-      ])
+      .color("value", ["#feedde", "#fdbe85", "#fd8d3c", "#e6550d", "#a63603"])
       .style({
-        opacity: 0.8
-      })
-      
-    scene.addLayer(columnLayer)
-    return columnLayer
-  }
+        opacity: 0.8,
+      });
+
+    scene.addLayer(columnLayer);
+    return columnLayer;
+  };
 
   return (
-    <div 
-      ref={mapRef} 
-      className="gaode-map-container" 
-      style={{ 
-        width: "100%", 
-        height: "100%", 
-        position: "relative", 
+    <div
+      ref={mapRef}
+      className="gaode-map-container"
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
         zIndex: 1,
-        isolation: "isolate"
+        isolation: "isolate",
       }}
     />
-  )
-} 
+  );
+}

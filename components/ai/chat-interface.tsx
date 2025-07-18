@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Loader2, Bot, StopCircle, RefreshCw, Eye, EyeOff } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ChatMessageItem } from "./chat-message";
@@ -52,7 +57,7 @@ export function ChatInterface() {
 
     // 添加用户消息
     const userMessage = createChatMessage("user", content);
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     setIsStreaming(true);
     setStreamedContent("");
@@ -63,8 +68,8 @@ export function ChatInterface() {
         model: FIXED_MODEL,
         messages: messages
           .concat(userMessage)
-          .filter((msg) => msg.role !== "system" || msg === messages[0])
-          .map((msg) => ({
+          .filter(msg => msg.role !== "system" || msg === messages[0])
+          .map(msg => ({
             role: msg.role,
             content: msg.content,
           })),
@@ -108,15 +113,15 @@ export function ChatInterface() {
 
           // 解码二进制数据
           const chunk = decoder.decode(value, { stream: true });
-          
+
           // 处理 SSE 格式的数据
           const lines = chunk
             .split("\n")
-            .filter((line) => line.trim() !== "" && line.startsWith("data: "));
+            .filter(line => line.trim() !== "" && line.startsWith("data: "));
 
           for (const line of lines) {
             const data = line.substring(6); // 移除 "data: " 前缀
-            
+
             if (data === "[DONE]") {
               // 流式响应结束
               continue;
@@ -125,14 +130,14 @@ export function ChatInterface() {
             try {
               const parsedData = JSON.parse(data);
               const content = parsedData.content || "";
-              
+
               // 检查是否包含思考过程标记
               if (content.includes("> 💭") && !isThinking) {
                 setIsThinking(true);
               } else if (content.includes("\n>") && isThinking) {
                 setIsThinking(false);
               }
-              
+
               // 累积内容
               accumulatedContent += content;
               setStreamedContent(accumulatedContent);
@@ -151,8 +156,11 @@ export function ChatInterface() {
       } finally {
         // 流式响应结束，添加完整的助手消息
         if (accumulatedContent) {
-          const assistantMessage = createChatMessage("assistant", accumulatedContent);
-          setMessages((prev) => [...prev, assistantMessage]);
+          const assistantMessage = createChatMessage(
+            "assistant",
+            accumulatedContent
+          );
+          setMessages(prev => [...prev, assistantMessage]);
         }
         setIsStreaming(false);
         setStreamedContent("");
@@ -179,18 +187,16 @@ export function ChatInterface() {
     if (isStreaming) {
       stopStreaming();
     }
-    
+
     // 重置消息列表，只保留系统提示
-    setMessages([
-      createChatMessage("system", DEFAULT_SYSTEM_PROMPT),
-    ]);
-    
+    setMessages([createChatMessage("system", DEFAULT_SYSTEM_PROMPT)]);
+
     // 重置状态
     setIsLoading(false);
     setIsStreaming(false);
     setStreamedContent("");
     setIsThinking(false); // 重置思考状态
-    
+
     toast.success("对话已重置");
   };
 
@@ -209,7 +215,10 @@ export function ChatInterface() {
                 checked={showThinking}
                 onCheckedChange={setShowThinking}
               />
-              <Label htmlFor="show-thinking" className="text-xs sm:text-sm cursor-pointer">
+              <Label
+                htmlFor="show-thinking"
+                className="text-xs sm:text-sm cursor-pointer"
+              >
                 {showThinking ? (
                   <span className="flex items-center gap-1">
                     <Eye className="h-3.5 w-3.5" />
@@ -223,9 +232,9 @@ export function ChatInterface() {
                 )}
               </Label>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={resetConversation}
               className="flex items-center gap-1"
               disabled={isLoading && !isStreaming}
@@ -245,18 +254,25 @@ export function ChatInterface() {
           {messages.length === 1 && !streamedContent && (
             <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
               <Bot className="h-10 w-10 sm:h-12 sm:w-12 mb-3 sm:mb-4 text-primary/50" />
-              <h3 className="text-base sm:text-lg font-medium mb-2">Deepseek Qwen 32B 对话助手</h3>
+              <h3 className="text-base sm:text-lg font-medium mb-2">
+                Deepseek Qwen 32B 对话助手
+              </h3>
               <p className="text-sm sm:text-base max-w-md px-2 sm:px-0">
-                输入您的问题，AI 将为您提供回答。您可以询问任何问题，包括编程、知识查询、创意写作等。
+                输入您的问题，AI
+                将为您提供回答。您可以询问任何问题，包括编程、知识查询、创意写作等。
               </p>
             </div>
           )}
           {messages
-            .filter((msg) => msg.role !== "system")
-            .map((message) => (
-              <ChatMessageItem key={message.id} message={message} showThinking={showThinking} />
+            .filter(msg => msg.role !== "system")
+            .map(message => (
+              <ChatMessageItem
+                key={message.id}
+                message={message}
+                showThinking={showThinking}
+              />
             ))}
-          
+
           {/* 流式输出的临时消息 */}
           {streamedContent && (
             <div className="flex gap-2 sm:gap-3 my-4 sm:my-6 group justify-start">
@@ -269,7 +285,10 @@ export function ChatInterface() {
                 <Card className="bg-muted">
                   <CardContent className="p-2 sm:p-3 prose prose-sm dark:prose-invert max-w-none">
                     {showThinking ? (
-                      <ThinkContent content={streamedContent} showThinking={true} />
+                      <ThinkContent
+                        content={streamedContent}
+                        showThinking={true}
+                      />
                     ) : (
                       <>
                         {isThinking ? (
@@ -278,7 +297,10 @@ export function ChatInterface() {
                             <span>AI 正在思考中...</span>
                           </div>
                         ) : (
-                          <ThinkContent content={streamedContent} showThinking={false} />
+                          <ThinkContent
+                            content={streamedContent}
+                            showThinking={false}
+                          />
                         )}
                       </>
                     )}
@@ -288,7 +310,7 @@ export function ChatInterface() {
               </div>
             </div>
           )}
-          
+
           {isLoading && !isStreaming && (
             <div className="flex justify-center py-4">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -301,9 +323,9 @@ export function ChatInterface() {
         <div className="w-full">
           {isStreaming && (
             <div className="flex justify-center mb-3 sm:mb-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={stopStreaming}
                 className="flex items-center gap-2"
               >
@@ -317,4 +339,4 @@ export function ChatInterface() {
       </CardFooter>
     </Card>
   );
-} 
+}

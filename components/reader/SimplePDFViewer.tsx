@@ -21,11 +21,11 @@ export function SimplePDFViewer({ file, onFileChange }: SimplePDFViewerProps) {
     if (files && files[0]) {
       const fileUrl = URL.createObjectURL(files[0]);
       setPdfUrl(fileUrl);
-      
+
       if (onFileChange) {
         onFileChange(files[0]);
       }
-      
+
       toast.success("PDF 文件已加载");
     }
   };
@@ -43,11 +43,11 @@ export function SimplePDFViewer({ file, onFileChange }: SimplePDFViewerProps) {
             className="w-full"
           />
         </div>
-        
+
         {pdfUrl && (
           <Button
             variant="outline"
-            onClick={() => window.open(pdfUrl, '_blank')}
+            onClick={() => window.open(pdfUrl, "_blank")}
           >
             在新窗口打开
           </Button>
@@ -69,7 +69,7 @@ export function SimplePDFViewer({ file, onFileChange }: SimplePDFViewerProps) {
               variant="outline"
               onClick={() => {
                 const url = URL.createObjectURL(file);
-                window.open(url, '_blank');
+                window.open(url, "_blank");
               }}
             >
               在新窗口打开
@@ -83,4 +83,4 @@ export function SimplePDFViewer({ file, onFileChange }: SimplePDFViewerProps) {
       </div>
     </div>
   );
-} 
+}

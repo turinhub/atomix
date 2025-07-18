@@ -1,6 +1,6 @@
 export type ChatMessage = {
   id: string;
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
   createdAt: Date;
 };
@@ -22,7 +22,7 @@ export type OpenAIModel = {
 export type OpenAIModels = OpenAIModel[];
 
 export type OpenAIMessage = {
-  role: 'system' | 'user' | 'assistant';
+  role: "system" | "user" | "assistant";
   content: string;
 };
 
@@ -50,4 +50,4 @@ export type OpenAIChatCompletionResponse = {
     completion_tokens: number;
     total_tokens: number;
   };
-}; 
+};

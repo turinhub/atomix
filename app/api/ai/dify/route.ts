@@ -6,10 +6,7 @@ export async function POST(req: Request) {
   try {
     // 获取环境变量
     if (!DIFY_API_KEY || !DIFY_BASE_URL) {
-      return Response.json(
-        { error: "Dify API 配置缺失" },
-        { status: 500 }
-      );
+      return Response.json({ error: "Dify API 配置缺失" }, { status: 500 });
     }
 
     // 解析请求数据
@@ -17,10 +14,7 @@ export async function POST(req: Request) {
     const { inputs, response_mode, user } = data;
 
     if (!inputs || !inputs.query) {
-      return Response.json(
-        { error: "请求数据无效" },
-        { status: 400 }
-      );
+      return Response.json({ error: "请求数据无效" }, { status: 400 });
     }
 
     // 准备请求数据
@@ -32,14 +26,17 @@ export async function POST(req: Request) {
     };
 
     // 发送请求到 Dify API
-    const difyResponse = await fetch(`${DIFY_BASE_URL}/v1/completion-messages`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${DIFY_API_KEY}`,
-      },
-      body: JSON.stringify(requestData),
-    });
+    const difyResponse = await fetch(
+      `${DIFY_BASE_URL}/v1/completion-messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${DIFY_API_KEY}`,
+        },
+        body: JSON.stringify(requestData),
+      }
+    );
 
     if (!difyResponse.ok) {
       const errorData = await difyResponse.json();
@@ -91,15 +88,12 @@ export async function POST(req: Request) {
         headers: {
           "Content-Type": "text/event-stream",
           "Cache-Control": "no-cache",
-          "Connection": "keep-alive",
+          Connection: "keep-alive",
         },
       }
     );
   } catch (error) {
     console.error("Dify API 处理错误:", error);
-    return Response.json(
-      { error: "处理请求时出错" },
-      { status: 500 }
-    );
+    return Response.json({ error: "处理请求时出错" }, { status: 500 });
   }
-} 
+}

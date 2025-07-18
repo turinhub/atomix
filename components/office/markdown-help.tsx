@@ -8,8 +8,8 @@ export default function MarkdownHelp() {
       items: [
         { syntax: "# 一级标题", description: "最大的标题" },
         { syntax: "## 二级标题", description: "次级标题" },
-        { syntax: "### 三级标题", description: "三级标题" }
-      ]
+        { syntax: "### 三级标题", description: "三级标题" },
+      ],
     },
     {
       category: "文本样式",
@@ -17,37 +17,43 @@ export default function MarkdownHelp() {
         { syntax: "**粗体文本**", description: "加粗显示" },
         { syntax: "*斜体文本*", description: "倾斜显示" },
         { syntax: "~~删除线~~", description: "删除线效果" },
-        { syntax: "`行内代码`", description: "行内代码样式" }
-      ]
+        { syntax: "`行内代码`", description: "行内代码样式" },
+      ],
     },
     {
       category: "列表",
       items: [
         { syntax: "- 无序列表项", description: "无序列表" },
         { syntax: "1. 有序列表项", description: "有序列表" },
-        { syntax: "  - 嵌套列表项", description: "嵌套列表" }
-      ]
+        { syntax: "  - 嵌套列表项", description: "嵌套列表" },
+      ],
     },
     {
       category: "链接和图片",
       items: [
         { syntax: "[链接文本](URL)", description: "创建链接" },
         { syntax: "![图片描述](图片URL)", description: "插入图片" },
-        { syntax: "<https://example.com>", description: "自动链接" }
-      ]
+        { syntax: "<https://example.com>", description: "自动链接" },
+      ],
     },
     {
       category: "代码块",
       items: [
-        { syntax: "```javascript\ncode\n```", description: "带语言高亮的代码块" },
-        { syntax: "```\n普通代码块\n```", description: "普通代码块" }
-      ]
+        {
+          syntax: "```javascript\ncode\n```",
+          description: "带语言高亮的代码块",
+        },
+        { syntax: "```\n普通代码块\n```", description: "普通代码块" },
+      ],
     },
     {
       category: "表格",
       items: [
-        { syntax: "| 列1 | 列2 |\n|-----|-----|\n| 内容 | 内容 |", description: "创建表格" }
-      ]
+        {
+          syntax: "| 列1 | 列2 |\n|-----|-----|\n| 内容 | 内容 |",
+          description: "创建表格",
+        },
+      ],
     },
     {
       category: "其他",
@@ -55,9 +61,9 @@ export default function MarkdownHelp() {
         { syntax: "> 引用文本", description: "引用块" },
         { syntax: "---", description: "水平分割线" },
         { syntax: "- [ ] 待办事项", description: "待办列表" },
-        { syntax: "- [x] 已完成", description: "已完成事项" }
-      ]
-    }
+        { syntax: "- [x] 已完成", description: "已完成事项" },
+      ],
+    },
   ];
 
   return (
@@ -68,7 +74,7 @@ export default function MarkdownHelp() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-6 md:grid-cols-2">
-            {syntaxExamples.map((category) => (
+            {syntaxExamples.map(category => (
               <div key={category.category} className="space-y-3">
                 <Badge variant="secondary">{category.category}</Badge>
                 <div className="space-y-2">
@@ -118,4 +124,4 @@ export default function MarkdownHelp() {
       </Card>
     </div>
   );
-} 
+}

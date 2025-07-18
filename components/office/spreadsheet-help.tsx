@@ -7,38 +7,38 @@ export default function SpreadsheetHelp() {
       category: "基本操作",
       items: [
         "双击单元格进行编辑",
-        "支持拖拽选择多个单元格", 
+        "支持拖拽选择多个单元格",
         "右键菜单进行复制、粘贴、删除操作",
-        "Ctrl+Z 撤销，Ctrl+Y 重做"
-      ]
+        "Ctrl+Z 撤销，Ctrl+Y 重做",
+      ],
     },
     {
-      category: "公式计算", 
+      category: "公式计算",
       items: [
         "SUM(A1:A10) - 求和函数",
         "AVERAGE(A1:A10) - 平均值函数",
         "COUNT(A1:A10) - 计数函数",
-        "IF(A1>100,'高','低') - 条件判断"
-      ]
+        "IF(A1>100,'高','低') - 条件判断",
+      ],
     },
     {
       category: "格式设置",
       items: [
         "设置字体、字号、颜色",
-        "设置单元格背景色", 
+        "设置单元格背景色",
         "添加边框和线条",
-        "设置文本对齐方式"
-      ]
+        "设置文本对齐方式",
+      ],
     },
     {
       category: "数据处理",
       items: [
         "排序和筛选数据",
         "插入和删除行列",
-        "合并和拆分单元格", 
-        "冻结窗格"
-      ]
-    }
+        "合并和拆分单元格",
+        "冻结窗格",
+      ],
+    },
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function SpreadsheetHelp() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
-            {features.map((feature) => (
+            {features.map(feature => (
               <div key={feature.category} className="space-y-2">
                 <Badge variant="secondary">{feature.category}</Badge>
                 <ul className="text-sm space-y-1 ml-2">
@@ -101,4 +101,4 @@ export default function SpreadsheetHelp() {
       </Card>
     </div>
   );
-} 
+}

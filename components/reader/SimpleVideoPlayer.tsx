@@ -69,7 +69,7 @@ export function SimpleVideoPlayer({ src, poster }: SimpleVideoPlayerProps) {
               type="text"
               placeholder="输入视频 URL 或上传视频文件"
               value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
+              onChange={e => setVideoUrl(e.target.value)}
               className="flex-1"
             />
             <Button type="submit" variant="outline">
@@ -99,7 +99,7 @@ export function SimpleVideoPlayer({ src, poster }: SimpleVideoPlayerProps) {
             poster={poster}
             controls
             className="w-full h-full"
-            style={{ maxHeight: '500px' }}
+            style={{ maxHeight: "500px" }}
           />
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-white">
@@ -117,4 +117,4 @@ export function SimpleVideoPlayer({ src, poster }: SimpleVideoPlayerProps) {
 
 // 修复 ESLint 警告：将对象赋值给变量后再导出
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { SimpleVideoPlayer }; 
+export default { SimpleVideoPlayer };

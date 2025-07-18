@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
-import { Sidebar } from "@/components/sidebar/sidebar"
-import { MobileNav } from "@/components/sidebar/mobile-nav"
-import { SidebarOverlay } from "@/components/sidebar-overlay"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { Sidebar } from "@/components/sidebar/sidebar";
+import { MobileNav } from "@/components/sidebar/mobile-nav";
+import { SidebarOverlay } from "@/components/sidebar-overlay";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -35,7 +35,11 @@ export default function RootLayout({
           src="https://umami.loongtales.com/script.js"
           data-website-id="1ce18bfe-d08d-442d-9fd3-cd62909f817d"
         />
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
+        <script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+          async
+          defer
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

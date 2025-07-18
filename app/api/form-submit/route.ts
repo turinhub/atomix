@@ -26,10 +26,7 @@ export async function POST(request: NextRequest) {
     // 在这里处理表单数据，例如保存到数据库
     // 这里只是示例，实际应用中应该添加更多的处理逻辑
 
-    return NextResponse.json(
-      { message: "表单提交成功" },
-      { status: 200 }
-    );
+    return NextResponse.json({ message: "表单提交成功" }, { status: 200 });
   } catch (error) {
     console.error("表单提交处理错误:", error);
     return NextResponse.json(
@@ -37,4 +34,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

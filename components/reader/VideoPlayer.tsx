@@ -133,7 +133,7 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
               type="text"
               placeholder="输入视频 URL 或上传视频文件"
               value={videoUrl}
-              onChange={(e) => setVideoUrl(e.target.value)}
+              onChange={e => setVideoUrl(e.target.value)}
               className="flex-1"
             />
             <Button type="submit" variant="outline">
@@ -187,4 +187,4 @@ export function VideoPlayer({ src, poster }: VideoPlayerProps) {
 
 // 修复 ESLint 警告：将对象赋值给变量后再导出
 const VideoPlayerModule = { VideoPlayer };
-export default VideoPlayerModule; 
+export default VideoPlayerModule;
