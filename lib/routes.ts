@@ -66,13 +66,20 @@ export const toolCategories: ToolCategory[] = [
     description: "人工智能对话和交互工具",
     icon: Bot,
     url: "/ai",
-    tools: [
-      { 
-        name: "Cloudflare AI API 对话", 
-        title: "Cloudflare AI API 对话", 
-        description: "使用 Cloudflare AI API，使用 Deepseek Qwen 32B", 
-        path: "/ai/chat",
-        url: "/ai/chat" 
+    tools: [      
+      {
+        name: "AI 对话",
+        title: "AI 对话",
+        description: "与先进的AI模型进行自然语言对话",
+        path: "/ai/ai-chat",
+        url: "/ai/ai-chat",
+      },
+      {
+        name: "AI 图像生成",
+        title: "AI 图像生成",
+        description: "使用人工智能生成各种风格的图像",
+        path: "/ai/ai-image",
+        url: "/ai/ai-image",
       },
       { 
         name: "Dify API 对话", 
@@ -123,6 +130,13 @@ export const toolCategories: ToolCategory[] = [
         description: "基于 Globe.gl 的 3D 地球热力图可视化，展示全球数据分布", 
         path: "/animation/globe-heatmap",
         url: "/animation/globe-heatmap" 
+      },
+      { 
+        name: "L7 线图层", 
+        title: "L7 线图层可视化", 
+        description: "基于 AntV L7 的线图层可视化，展示城市间的航线连接关系", 
+        path: "/gis/l7-line",
+        url: "/gis/l7-line" 
       }
     ]
   },
