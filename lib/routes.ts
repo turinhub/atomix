@@ -7,6 +7,7 @@ import {
   Globe,
   Sparkles,
   Table,
+  Network,
 } from "lucide-react";
 
 export type ToolItem = {
@@ -198,6 +199,21 @@ export const toolCategories: ToolCategory[] = [
         description: "专业的 LaTeX 编辑器，支持数学公式、论文排版和实时预览",
         path: "/office/latex",
         url: "/office/latex",
+      },
+    ],
+  },
+  {
+    title: "知识图谱",
+    description: "知识图谱可视化和分析工具",
+    icon: Network,
+    url: "/knowledge-graph",
+    tools: [
+      {
+        name: "知识图谱示例",
+        title: "知识图谱示例",
+        description: "交互式知识图谱可视化示例，展示节点和关系网络",
+        path: "/knowledge-graph",
+        url: "/knowledge-graph",
       },
     ],
   },
