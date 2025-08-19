@@ -47,6 +47,20 @@ export const toolCategories: ToolCategory[] = [
         path: "/reader/video",
         url: "/reader/video",
       },
+      {
+        name: "DOCX 阅读器",
+        title: "DOCX 阅读器",
+        description: "在线 DOCX 文档阅读工具",
+        path: "/reader/docx",
+        url: "/reader/docx",
+      },
+      {
+        name: "PPT 阅读器",
+        title: "PPT 阅读器",
+        description: "在线 PPT 演示文稿阅读工具",
+        path: "/reader/ppt",
+        url: "/reader/ppt",
+      },
     ],
   },
   {

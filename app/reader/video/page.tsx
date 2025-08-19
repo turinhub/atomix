@@ -50,8 +50,7 @@ export default function VideoReaderPage() {
   const [useSimplePlayer, setUseSimplePlayer] = useState<boolean>(false);
 
   // 默认视频示例
-  const defaultVideoUrl =
-    "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4";
+  const defaultVideoUrl = "https://oss.turinhub.com/atomix/AI_Mascot_Video.mp4";
   const defaultVideoPoster =
     "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg";
 
@@ -155,7 +154,7 @@ export default function VideoReaderPage() {
                 )}
               </Button>
               <p className="text-sm text-muted-foreground">
-                加载一个高质量的示例视频进行测试
+                加载 AI_Mascot_Video.mp4 示例视频进行测试
               </p>
             </div>
           </TabsContent>

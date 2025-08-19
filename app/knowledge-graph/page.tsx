@@ -1,4 +1,4 @@
-import { KnowledgeGraph } from '@/components/knowledge-graph';
+import { KnowledgeGraph } from "@/components/knowledge-graph";
 
 export default function KnowledgeGraphPage() {
   return (
