@@ -23,7 +23,10 @@ import debounce from "lodash/debounce";
 import { useHotkeys } from "react-hotkeys-hook";
 import { PDFSidebar } from "./PDFSidebar";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.mjs`;
+// 设置 PDF.js worker - 使用本地文件避免 CORS 问题
+if (typeof window !== "undefined") {
+  pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
+}
 
 interface PDFViewerProps {
   pdfUri: string;

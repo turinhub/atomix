@@ -29,6 +29,11 @@ const DocViewer = dynamic(() => import("react-doc-viewer"), {
 // 默认 DOCX 文件 URL
 const DEFAULT_DOCX_URL = "https://oss.turinhub.com/atomix/135.docx";
 
+// 获取代理 URL
+const getProxyUrl = (url: string) => {
+  return `/api/proxy/document?url=${encodeURIComponent(url)}`;
+};
+
 export default function DocxReaderPage() {
   const [docxUrl, setDocxUrl] = useState<string>("");
   const [currentDocx, setCurrentDocx] = useState<string>(DEFAULT_DOCX_URL);
@@ -79,7 +84,7 @@ export default function DocxReaderPage() {
     if (docxUrl.trim()) {
       setHasError(false);
       setErrorMessage("");
-      setCurrentDocx(docxUrl);
+      setCurrentDocx(getProxyUrl(docxUrl));
       setTitle("自定义 Word 文档");
       toast.success("已加载 Word 文档 URL");
     } else {
@@ -90,42 +95,15 @@ export default function DocxReaderPage() {
   // 加载默认文档
   const loadDefaultDoc = (abortController?: AbortController) => {
     setIsLoading(true);
-
-    // 检查默认文档是否可访问（仅在客户端环境）
-    if (typeof window !== "undefined") {
-      fetch(DEFAULT_DOCX_URL, {
-        method: "HEAD",
-        signal: abortController?.signal,
-      })
-        .then(response => {
-          if (!abortController?.signal.aborted && response.ok) {
-            setCurrentDocx(DEFAULT_DOCX_URL);
-            setTitle("DOCX 文档");
-            setDocxUrl(DEFAULT_DOCX_URL);
-            // 尝试使用 react-doc-viewer 预览 DOCX 文件
-            setHasError(false);
-            setErrorMessage("");
-            toast.success("已加载默认 DOCX 文档");
-          } else if (!abortController?.signal.aborted) {
-            setCurrentDocx("");
-            toast.error("默认 DOCX 文档无法访问");
-          }
-        })
-        .catch(error => {
-          if (!abortController?.signal.aborted && error.name !== "AbortError") {
-            setCurrentDocx("");
-            toast.error("默认 DOCX 文档加载失败");
-          }
-        })
-        .finally(() => {
-          if (!abortController?.signal.aborted) {
-            setIsLoading(false);
-          }
-        });
-    } else {
-      // 服务器端渲染时不加载文档
-      setIsLoading(false);
-    }
+    
+    // 直接加载默认DOCX，不进行可访问性检查以避免CORS问题
+    setCurrentDocx(getProxyUrl(DEFAULT_DOCX_URL));
+    setTitle("DOCX 文档");
+    setDocxUrl(DEFAULT_DOCX_URL);
+    setHasError(false);
+    setErrorMessage("");
+    toast.success("已加载默认 DOCX 文档");
+    setIsLoading(false);
   };
 
   // 准备文档数据

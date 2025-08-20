@@ -18,6 +18,11 @@ import PDFViewer from "@/components/read/PDFViewer";
 // 默认 PDF 文件 URL - 保持使用现有的 demo.pdf
 const DEFAULT_PDF_URL = "https://oss.turinhub.com/atomix/DeepSeek_R1.pdf";
 
+// 获取代理 URL
+const getProxyUrl = (url: string) => {
+  return `/api/proxy/document?url=${encodeURIComponent(url)}`;
+};
+
 export default function PDFReaderPage() {
   const [pdfUrl, setPdfUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,7 +41,7 @@ export default function PDFReaderPage() {
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pdfUrl.trim()) {
-      setCurrentPdfUri(pdfUrl);
+      setCurrentPdfUri(getProxyUrl(pdfUrl));
       setTitle("自定义 PDF 文档");
       toast.success("已加载 PDF URL");
     } else {
@@ -47,32 +52,13 @@ export default function PDFReaderPage() {
   // 加载默认 PDF
   const loadDefaultPdf = () => {
     setIsLoading(true);
-
-    // 检查默认 PDF 是否可访问（仅在客户端环境）
-    if (typeof window !== "undefined") {
-      fetch(DEFAULT_PDF_URL, { method: "HEAD" })
-        .then(response => {
-          if (response.ok) {
-            setCurrentPdfUri(DEFAULT_PDF_URL);
-            setTitle("DeepSeek R1 技术报告");
-            setPdfUrl(DEFAULT_PDF_URL);
-            toast.success("已加载默认 PDF 文件");
-          } else {
-            setCurrentPdfUri("");
-            toast.error("默认 PDF 文件无法访问");
-          }
-        })
-        .catch(() => {
-          setCurrentPdfUri("");
-          toast.error("默认 PDF 文件加载失败");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      // 服务器端渲染时不加载 PDF
-      setIsLoading(false);
-    }
+    
+    // 直接加载默认PDF，不进行可访问性检查以避免CORS问题
+    setCurrentPdfUri(getProxyUrl(DEFAULT_PDF_URL));
+    setTitle("DeepSeek R1 技术报告");
+    setPdfUrl(DEFAULT_PDF_URL);
+    toast.success("已加载默认 PDF 文件");
+    setIsLoading(false);
   };
 
   return (

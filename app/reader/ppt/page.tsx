@@ -26,6 +26,11 @@ const DocViewer = dynamic(() => import("react-doc-viewer"), {
 // 默认 PPT 文件 URL
 const DEFAULT_PPT_URL = "https://oss.turinhub.com/atomix/srm.pptx";
 
+// 获取代理 URL
+const getProxyUrl = (url: string) => {
+  return `/api/proxy/document?url=${encodeURIComponent(url)}`;
+};
+
 export default function PptReaderPage() {
   const [pptUrl, setPptUrl] = useState<string>("");
   const [currentPpt, setCurrentPpt] = useState<string>(DEFAULT_PPT_URL);
@@ -67,7 +72,7 @@ export default function PptReaderPage() {
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (pptUrl.trim()) {
-      setCurrentPpt(pptUrl);
+      setCurrentPpt(getProxyUrl(pptUrl));
       setTitle("自定义 PPT 演示");
       // 尝试使用 react-doc-viewer 预览 PPT 文件
       setHasError(false);
@@ -82,37 +87,15 @@ export default function PptReaderPage() {
   const loadDefaultDoc = (abortController?: AbortController) => {
     setIsLoading(true);
 
-    // 检查默认文档是否可访问（仅在客户端环境）
+    // 直接使用代理 URL 加载默认文档
     if (typeof window !== "undefined") {
-      fetch(DEFAULT_PPT_URL, {
-        method: "HEAD",
-        signal: abortController?.signal,
-      })
-        .then(response => {
-          if (!abortController?.signal.aborted && response.ok) {
-            setCurrentPpt(DEFAULT_PPT_URL);
-            setTitle("PPT 演示文档");
-            setPptUrl(DEFAULT_PPT_URL);
-            // 尝试使用 react-doc-viewer 预览 PPT 文件
-            setHasError(false);
-            setErrorMessage("");
-            toast.success("已加载默认 PPT 文档");
-          } else if (!abortController?.signal.aborted) {
-            setCurrentPpt("");
-            toast.error("默认 PPT 文档无法访问");
-          }
-        })
-        .catch(error => {
-          if (!abortController?.signal.aborted && error.name !== "AbortError") {
-            setCurrentPpt("");
-            toast.error("默认 PPT 文档加载失败");
-          }
-        })
-        .finally(() => {
-          if (!abortController?.signal.aborted) {
-            setIsLoading(false);
-          }
-        });
+      setCurrentPpt(getProxyUrl(DEFAULT_PPT_URL));
+      setTitle("PPT 演示文档");
+      setPptUrl(DEFAULT_PPT_URL);
+      setHasError(false);
+      setErrorMessage("");
+      toast.success("已加载默认 PPT 文档");
+      setIsLoading(false);
     } else {
       // 服务器端渲染时不加载文档
       setIsLoading(false);
