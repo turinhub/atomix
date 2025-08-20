@@ -5,35 +5,44 @@ export async function GET(request: NextRequest) {
   const url = searchParams.get("url");
 
   if (!url) {
-    return NextResponse.json({ error: "URL parameter is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "URL parameter is required" },
+      { status: 400 }
+    );
   }
 
   try {
     // 验证URL格式
     const targetUrl = new URL(url);
-    
+
     // 只允许HTTP和HTTPS协议
-    if (!['http:', 'https:'].includes(targetUrl.protocol)) {
-      return NextResponse.json({ error: "Only HTTP and HTTPS URLs are allowed" }, { status: 400 });
+    if (!["http:", "https:"].includes(targetUrl.protocol)) {
+      return NextResponse.json(
+        { error: "Only HTTP and HTTPS URLs are allowed" },
+        { status: 400 }
+      );
     }
 
     // 获取远程文档
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; DocumentProxy/1.0)',
+        "User-Agent": "Mozilla/5.0 (compatible; DocumentProxy/1.0)",
       },
     });
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: `Failed to fetch document: ${response.status} ${response.statusText}` },
+        {
+          error: `Failed to fetch document: ${response.status} ${response.statusText}`,
+        },
         { status: response.status }
       );
     }
 
     // 获取内容类型
-    const contentType = response.headers.get("content-type") || "application/octet-stream";
-    
+    const contentType =
+      response.headers.get("content-type") || "application/octet-stream";
+
     // 获取文档内容
     const buffer = await response.arrayBuffer();
 
