@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -12,7 +18,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 // 动态导入 DocViewer 组件，禁用 SSR
 const DocViewer = dynamic(() => import("react-doc-viewer"), {
   ssr: false,
-  loading: () => <div className="flex items-center justify-center h-64">加载中...</div>,
+  loading: () => (
+    <div className="flex items-center justify-center h-64">加载中...</div>
+  ),
 });
 
 // 默认 PPT 文件 URL
@@ -30,24 +38,26 @@ export default function PptReaderPage() {
   // 初始化时加载默认文档和渲染器
   useEffect(() => {
     const abortController = new AbortController();
-    
+
     // 只在客户端执行
     if (typeof window !== "undefined") {
       loadDefaultDoc(abortController);
       // 动态加载渲染器
-      import("react-doc-viewer").then(mod => {
-        if (!abortController.signal.aborted && mod.DocViewerRenderers) {
-          setRenderers(mod.DocViewerRenderers);
-        }
-      }).catch(error => {
-        if (!abortController.signal.aborted) {
-          console.error("加载渲染器失败:", error);
-          setHasError(true);
-          setErrorMessage("文档渲染器加载失败");
-        }
-      });
+      import("react-doc-viewer")
+        .then(mod => {
+          if (!abortController.signal.aborted && mod.DocViewerRenderers) {
+            setRenderers(mod.DocViewerRenderers);
+          }
+        })
+        .catch(error => {
+          if (!abortController.signal.aborted) {
+            console.error("加载渲染器失败:", error);
+            setHasError(true);
+            setErrorMessage("文档渲染器加载失败");
+          }
+        });
     }
-    
+
     return () => {
       abortController.abort();
     };
@@ -74,9 +84,9 @@ export default function PptReaderPage() {
 
     // 检查默认文档是否可访问（仅在客户端环境）
     if (typeof window !== "undefined") {
-      fetch(DEFAULT_PPT_URL, { 
+      fetch(DEFAULT_PPT_URL, {
         method: "HEAD",
-        signal: abortController?.signal
+        signal: abortController?.signal,
       })
         .then(response => {
           if (!abortController?.signal.aborted && response.ok) {
@@ -92,8 +102,8 @@ export default function PptReaderPage() {
             toast.error("默认 PPT 文档无法访问");
           }
         })
-        .catch((error) => {
-          if (!abortController?.signal.aborted && error.name !== 'AbortError') {
+        .catch(error => {
+          if (!abortController?.signal.aborted && error.name !== "AbortError") {
             setCurrentPpt("");
             toast.error("默认 PPT 文档加载失败");
           }
@@ -108,8 +118,6 @@ export default function PptReaderPage() {
       setIsLoading(false);
     }
   };
-
-
 
   // 准备文档数据
   const docs = currentPpt
@@ -142,14 +150,14 @@ export default function PptReaderPage() {
               type="url"
               placeholder="输入 PPT 文档链接..."
               value={pptUrl}
-              onChange={(e) => setPptUrl(e.target.value)}
+              onChange={e => setPptUrl(e.target.value)}
               className="flex-1"
             />
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "加载中..." : "加载"}
             </Button>
           </form>
-          
+
           <Button
             onClick={() => loadDefaultDoc()}
             variant="outline"
@@ -172,9 +180,13 @@ export default function PptReaderPage() {
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   <div className="space-y-3">
-                    <p>PPT 文件预览失败。请检查文件链接是否正确，或尝试使用其他 PPT 文档。</p>
+                    <p>
+                      PPT 文件预览失败。请检查文件链接是否正确，或尝试使用其他
+                      PPT 文档。
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      某些 PPT 文件格式可能不支持在线预览，建议使用标准的 .pptx 格式。
+                      某些 PPT 文件格式可能不支持在线预览，建议使用标准的 .pptx
+                      格式。
                     </p>
                   </div>
                 </AlertDescription>
@@ -201,7 +213,9 @@ export default function PptReaderPage() {
                   <div className="flex items-center justify-center h-full text-muted-foreground">
                     <div className="text-center">
                       <p className="mb-2">文档查看器加载中...</p>
-                      <p className="text-sm">如果长时间无响应，请尝试刷新页面</p>
+                      <p className="text-sm">
+                        如果长时间无响应，请尝试刷新页面
+                      </p>
                     </div>
                   </div>
                 )}

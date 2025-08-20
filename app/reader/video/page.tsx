@@ -104,9 +104,7 @@ export default function VideoReaderPage() {
       <Card>
         <CardHeader>
           <CardTitle>{title}</CardTitle>
-          <CardDescription>
-            支持多种视频格式的在线播放器
-          </CardDescription>
+          <CardDescription>支持多种视频格式的在线播放器</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
@@ -131,9 +129,7 @@ export default function VideoReaderPage() {
                 onChange={e => setVideoUrl(e.target.value)}
                 className="flex-1"
               />
-              <Button type="submit">
-                加载
-              </Button>
+              <Button type="submit">加载</Button>
             </div>
           </form>
         </CardContent>

@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -35,24 +41,26 @@ export default function DocxReaderPage() {
   // 初始化时加载默认文档和渲染器
   useEffect(() => {
     const abortController = new AbortController();
-    
+
     // 只在客户端执行
     if (typeof window !== "undefined") {
       loadDefaultDoc(abortController);
       // 动态加载渲染器
-      import("react-doc-viewer").then((mod) => {
-        if (!abortController.signal.aborted && mod.DocViewerRenderers) {
-          setRenderers(mod.DocViewerRenderers);
-        }
-      }).catch((error) => {
-        if (!abortController.signal.aborted) {
-          console.error("Failed to load DocViewerRenderers:", error);
-          setHasError(true);
-          setErrorMessage("文档渲染器加载失败");
-        }
-      });
+      import("react-doc-viewer")
+        .then(mod => {
+          if (!abortController.signal.aborted && mod.DocViewerRenderers) {
+            setRenderers(mod.DocViewerRenderers);
+          }
+        })
+        .catch(error => {
+          if (!abortController.signal.aborted) {
+            console.error("Failed to load DocViewerRenderers:", error);
+            setHasError(true);
+            setErrorMessage("文档渲染器加载失败");
+          }
+        });
     }
-    
+
     return () => {
       abortController.abort();
     };
@@ -85,9 +93,9 @@ export default function DocxReaderPage() {
 
     // 检查默认文档是否可访问（仅在客户端环境）
     if (typeof window !== "undefined") {
-      fetch(DEFAULT_DOCX_URL, { 
+      fetch(DEFAULT_DOCX_URL, {
         method: "HEAD",
-        signal: abortController?.signal
+        signal: abortController?.signal,
       })
         .then(response => {
           if (!abortController?.signal.aborted && response.ok) {
@@ -103,8 +111,8 @@ export default function DocxReaderPage() {
             toast.error("默认 DOCX 文档无法访问");
           }
         })
-        .catch((error) => {
-          if (!abortController?.signal.aborted && error.name !== 'AbortError') {
+        .catch(error => {
+          if (!abortController?.signal.aborted && error.name !== "AbortError") {
             setCurrentDocx("");
             toast.error("默认 DOCX 文档加载失败");
           }
@@ -145,14 +153,14 @@ export default function DocxReaderPage() {
               type="url"
               placeholder="输入 Word 文档链接..."
               value={docxUrl}
-              onChange={(e) => setDocxUrl(e.target.value)}
+              onChange={e => setDocxUrl(e.target.value)}
               className="flex-1"
             />
             <Button type="submit" disabled={isLoading}>
               {isLoading ? "加载中..." : "加载"}
             </Button>
           </form>
-          
+
           <Button
             onClick={() => loadDefaultDoc()}
             variant="outline"
@@ -182,18 +190,18 @@ export default function DocxReaderPage() {
                   </div>
                 </Alert>
               ) : DocViewer ? (
-                 <DocViewer
-                   documents={docs}
-                   pluginRenderers={renderers}
-                   config={{
-                     header: {
-                       disableHeader: false,
-                       disableFileName: false,
-                       retainURLParams: false,
-                     },
-                   }}
-                   style={{ height: "100%" }}
-                 />
+                <DocViewer
+                  documents={docs}
+                  pluginRenderers={renderers}
+                  config={{
+                    header: {
+                      disableHeader: false,
+                      disableFileName: false,
+                      retainURLParams: false,
+                    },
+                  }}
+                  style={{ height: "100%" }}
+                />
               ) : (
                 <div className="flex justify-center items-center h-full text-muted-foreground">
                   文档查看器加载中...
