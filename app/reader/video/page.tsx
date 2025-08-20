@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Loader2, SwitchCamera } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 
 // 动态导入视频播放器组件，禁用 SSR
@@ -18,46 +25,40 @@ const VideoPlayer = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex justify-center items-center h-[500px] w-full">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">加载视频播放器...</span>
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span className="ml-2">加载中...</span>
       </div>
     ),
   }
 );
 
-// 动态导入简单视频播放器组件，禁用 SSR
-const SimpleVideoPlayer = dynamic(
-  () =>
-    import("@/components/reader/SimpleVideoPlayer").then(
-      mod => mod.default.SimpleVideoPlayer
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex justify-center items-center h-[500px] w-full">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">加载简单视频播放器...</span>
-      </div>
-    ),
-  }
-);
+// 默认视频示例
+const DEFAULT_VIDEO_URL = "https://oss.turinhub.com/atomix/AI_Mascot_Video.mp4";
 
 export default function VideoReaderPage() {
   const [videoUrl, setVideoUrl] = useState<string>("");
-  const [currentVideo, setCurrentVideo] = useState<string | null>(null);
+  const [currentVideo, setCurrentVideo] = useState<string>(DEFAULT_VIDEO_URL);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string>("url");
-  const [useSimplePlayer, setUseSimplePlayer] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("AI 吉祥物演示视频");
 
-  // 默认视频示例
-  const defaultVideoUrl = "https://oss.turinhub.com/atomix/AI_Mascot_Video.mp4";
-  const defaultVideoPoster =
-    "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg";
+  // 初始化时加载默认视频
+  useEffect(() => {
+    // 只在客户端执行
+    if (typeof window !== "undefined") {
+      loadDefaultVideo();
+    }
+  }, []);
 
-  // 切换播放器类型
-  const togglePlayer = () => {
-    setUseSimplePlayer(!useSimplePlayer);
-    toast.success(`已切换到${!useSimplePlayer ? "简单" : "高级"}播放器`);
+  // 处理 URL 提交
+  const handleUrlSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (videoUrl.trim()) {
+      setCurrentVideo(videoUrl);
+      setTitle("自定义视频");
+      toast.success("已加载视频 URL");
+    } else {
+      toast.error("请输入有效的视频 URL");
+    }
   };
 
   // 加载默认视频
@@ -66,40 +67,28 @@ export default function VideoReaderPage() {
 
     // 检查默认视频是否可访问（仅在客户端环境）
     if (typeof window !== "undefined") {
-      fetch(defaultVideoUrl, { method: "HEAD" })
+      fetch(DEFAULT_VIDEO_URL, { method: "HEAD" })
         .then(response => {
           if (response.ok) {
-            setCurrentVideo(defaultVideoUrl);
-            setVideoUrl(defaultVideoUrl);
-            toast.success("已加载示例视频");
+            setCurrentVideo(DEFAULT_VIDEO_URL);
+            setTitle("AI 吉祥物演示视频");
+            setVideoUrl(DEFAULT_VIDEO_URL);
+            toast.success("已加载默认视频文件");
           } else {
-            toast.error("无法加载示例视频，请尝试其他视频");
+            setCurrentVideo("");
+            toast.error("默认视频文件无法访问");
           }
         })
         .catch(() => {
-          toast.error("无法访问示例视频，请尝试其他视频");
+          setCurrentVideo("");
+          toast.error("默认视频文件加载失败");
         })
         .finally(() => {
           setIsLoading(false);
         });
     } else {
-      // 服务器端渲染时，直接设置视频 URL
-      setCurrentVideo(defaultVideoUrl);
-      setVideoUrl(defaultVideoUrl);
+      // 服务器端渲染时不加载视频
       setIsLoading(false);
-    }
-  };
-
-  // 处理视频 URL 提交
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (videoUrl.trim()) {
-      setIsLoading(true);
-      setCurrentVideo(videoUrl);
-      toast.success("视频已加载");
-      setIsLoading(false);
-    } else {
-      toast.error("请输入有效的视频 URL");
     }
   };
 
@@ -112,91 +101,71 @@ export default function VideoReaderPage() {
         </p>
       </div>
 
-      <div className="flex justify-between items-center">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList>
-            <TabsTrigger value="url">输入视频链接</TabsTrigger>
-            <TabsTrigger value="example">使用示例视频</TabsTrigger>
-          </TabsList>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>
+            支持多种视频格式的在线播放器
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2">
+            <Button onClick={loadDefaultVideo} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  加载中...
+                </>
+              ) : (
+                "加载 demo.mp4"
+              )}
+            </Button>
+          </div>
 
-          <TabsContent value="url" className="space-y-4">
-            <form onSubmit={handleSubmit} className="flex gap-2">
+          <form onSubmit={handleUrlSubmit} className="space-y-2">
+            <div className="flex gap-2">
               <Input
-                type="text"
-                placeholder="输入视频 URL"
+                type="url"
+                placeholder="输入视频 URL (如: https://example.com/video.mp4)"
                 value={videoUrl}
                 onChange={e => setVideoUrl(e.target.value)}
                 className="flex-1"
               />
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    加载中
-                  </>
-                ) : (
-                  "加载视频"
-                )}
+              <Button type="submit">
+                加载
               </Button>
-            </form>
-          </TabsContent>
-
-          <TabsContent value="example" className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Button onClick={loadDefaultVideo} disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    加载中
-                  </>
-                ) : (
-                  "加载示例视频"
-                )}
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                加载 AI_Mascot_Video.mp4 示例视频进行测试
-              </p>
             </div>
-          </TabsContent>
-        </Tabs>
-
-        <Button variant="outline" onClick={togglePlayer} className="ml-2">
-          <SwitchCamera className="h-4 w-4 mr-2" />
-          切换到{useSimplePlayer ? "高级" : "简单"}播放器
-        </Button>
-      </div>
+          </form>
+        </CardContent>
+      </Card>
 
       {isLoading ? (
         <div className="flex justify-center items-center h-[500px] w-full">
           <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">加载视频中...</span>
+          <span className="ml-2">加载中...</span>
         </div>
-      ) : useSimplePlayer ? (
-        <SimpleVideoPlayer
-          src={currentVideo || undefined}
-          poster={
-            currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined
-          }
-        />
+      ) : currentVideo ? (
+        <VideoPlayer src={currentVideo} />
       ) : (
-        <VideoPlayer
-          src={currentVideo || undefined}
-          poster={
-            currentVideo === defaultVideoUrl ? defaultVideoPoster : undefined
-          }
-        />
+        <div className="flex justify-center items-center h-[500px] w-full border-2 border-dashed border-gray-300 rounded-lg">
+          <p className="text-muted-foreground">请加载视频文件</p>
+        </div>
       )}
 
-      <div className="mt-6 p-4 bg-muted rounded-lg">
-        <h3 className="font-medium mb-2">使用说明</h3>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>您可以通过输入视频 URL 或加载示例视频来使用播放器</li>
-          <li>支持的视频格式：MP4, WebM, Ogg 等主流格式</li>
-          <li>如果高级播放器无法正常工作，请尝试切换到简单播放器</li>
-          <li>简单播放器支持直接上传本地视频文件</li>
-          <li>高级播放器提供更多控制选项和更好的播放体验</li>
-        </ul>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>功能特点</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="list-disc list-inside space-y-1 text-sm">
+            <li>支持多种视频格式：MP4, WebM, Ogg 等</li>
+            <li>响应式设计，适配不同屏幕尺寸</li>
+            <li>支持播放控制：播放/暂停、音量调节、进度条</li>
+            <li>支持全屏播放模式</li>
+            <li>支持键盘快捷键操作</li>
+          </ul>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,250 +1,242 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { FileText, Download, ExternalLink, Upload, Link } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+// 动态导入 DocViewer 组件，禁用 SSR
+const DocViewer = dynamic(() => import("react-doc-viewer"), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-64">加载中...</div>,
+});
 
 // 默认 PPT 文件 URL
 const DEFAULT_PPT_URL = "https://oss.turinhub.com/atomix/srm.pptx";
 
 export default function PptReaderPage() {
-  const [pptUrl, setPptUrl] = useState<string>(DEFAULT_PPT_URL);
-  const [customUrl, setCustomUrl] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
+  const [pptUrl, setPptUrl] = useState<string>("");
+  const [currentPpt, setCurrentPpt] = useState<string>(DEFAULT_PPT_URL);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("PPT 演示文档");
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [renderers, setRenderers] = useState<any[]>([]);
 
-  // 加载默认文档
-  const loadDefaultDoc = () => {
-    setPptUrl(DEFAULT_PPT_URL);
-    toast.success("已加载默认 PPT 文档");
-  };
+  // 初始化时加载默认文档和渲染器
+  useEffect(() => {
+    const abortController = new AbortController();
+    
+    // 只在客户端执行
+    if (typeof window !== "undefined") {
+      loadDefaultDoc(abortController);
+      // 动态加载渲染器
+      import("react-doc-viewer").then(mod => {
+        if (!abortController.signal.aborted && mod.DocViewerRenderers) {
+          setRenderers(mod.DocViewerRenderers);
+        }
+      }).catch(error => {
+        if (!abortController.signal.aborted) {
+          console.error("加载渲染器失败:", error);
+          setHasError(true);
+          setErrorMessage("文档渲染器加载失败");
+        }
+      });
+    }
+    
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
   // 处理 URL 提交
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (customUrl.trim()) {
-      setPptUrl(customUrl.trim());
-      toast.success("PPT URL 已更新");
+    if (pptUrl.trim()) {
+      setCurrentPpt(pptUrl);
+      setTitle("自定义 PPT 演示");
+      // 尝试使用 react-doc-viewer 预览 PPT 文件
+      setHasError(false);
+      setErrorMessage("");
+      toast.success("已加载 PPT 文档 URL");
     } else {
-      toast.error("请输入有效的 PPT URL");
+      toast.error("请输入有效的 PPT 文档 URL");
     }
   };
 
-  // 处理文件上传
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      if (
-        selectedFile.type ===
-          "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
-        selectedFile.type === "application/vnd.ms-powerpoint" ||
-        selectedFile.name.toLowerCase().endsWith(".ppt") ||
-        selectedFile.name.toLowerCase().endsWith(".pptx")
-      ) {
-        setFile(selectedFile);
-        const fileUrl = URL.createObjectURL(selectedFile);
-        setPptUrl(fileUrl);
-        toast.success(`已选择文件：${selectedFile.name}`);
-      } else {
-        toast.error("请选择有效的 PPT 文件（.ppt 或 .pptx）");
-      }
+  // 加载默认文档
+  const loadDefaultDoc = (abortController?: AbortController) => {
+    setIsLoading(true);
+
+    // 检查默认文档是否可访问（仅在客户端环境）
+    if (typeof window !== "undefined") {
+      fetch(DEFAULT_PPT_URL, { 
+        method: "HEAD",
+        signal: abortController?.signal
+      })
+        .then(response => {
+          if (!abortController?.signal.aborted && response.ok) {
+            setCurrentPpt(DEFAULT_PPT_URL);
+            setTitle("PPT 演示文档");
+            setPptUrl(DEFAULT_PPT_URL);
+            // 尝试使用 react-doc-viewer 预览 PPT 文件
+            setHasError(false);
+            setErrorMessage("");
+            toast.success("已加载默认 PPT 文档");
+          } else if (!abortController?.signal.aborted) {
+            setCurrentPpt("");
+            toast.error("默认 PPT 文档无法访问");
+          }
+        })
+        .catch((error) => {
+          if (!abortController?.signal.aborted && error.name !== 'AbortError') {
+            setCurrentPpt("");
+            toast.error("默认 PPT 文档加载失败");
+          }
+        })
+        .finally(() => {
+          if (!abortController?.signal.aborted) {
+            setIsLoading(false);
+          }
+        });
+    } else {
+      // 服务器端渲染时不加载文档
+      setIsLoading(false);
     }
   };
 
-  // 下载文件
-  const downloadFile = () => {
-    if (pptUrl) {
-      const link = document.createElement("a");
-      link.href = pptUrl;
-      link.download = file?.name || "presentation.pptx";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toast.success("开始下载 PPT 文件");
-    }
-  };
 
-  // 在新窗口打开
-  const openInNewWindow = () => {
-    if (pptUrl) {
-      window.open(pptUrl, "_blank");
-      toast.success("已在新窗口打开 PPT 文件");
-    }
+
+  // 准备文档数据
+  const docs = currentPpt
+    ? [
+        {
+          uri: currentPpt,
+          fileName: title,
+        },
+      ]
+    : [];
+
+  // 处理 DocViewer 错误
+  const handleDocViewerError = (error: any) => {
+    console.error("DocViewer 错误:", error);
+    toast.error("文档预览失败，PPT 文件可能需要下载查看");
   };
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">PPT 演示文稿阅读器</h1>
-        <p className="text-muted-foreground">
-          支持上传本地 PPT 文件或通过 URL 加载远程文件。由于浏览器限制，PPT
-          文件无法直接在网页中预览，但您可以下载文件或在新窗口中打开。
-        </p>
-      </div>
+    <div className="container mx-auto p-6 space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+          <CardDescription>
+            使用 react-doc-viewer 在线预览 PPT 演示文档
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <form onSubmit={handleUrlSubmit} className="flex space-x-2">
+            <Input
+              type="url"
+              placeholder="输入 PPT 文档链接..."
+              value={pptUrl}
+              onChange={(e) => setPptUrl(e.target.value)}
+              className="flex-1"
+            />
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "加载中..." : "加载"}
+            </Button>
+          </form>
+          
+          <Button
+            onClick={() => loadDefaultDoc()}
+            variant="outline"
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "加载中..." : "加载示例 PPT 文档"}
+          </Button>
+        </CardContent>
+      </Card>
 
-      <div className="mb-6">
-        <Tabs defaultValue="example" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="example">示例文件</TabsTrigger>
-            <TabsTrigger value="upload">上传文件</TabsTrigger>
-            <TabsTrigger value="url">远程链接</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="example" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  示例 PPT 文档
-                </CardTitle>
-                <CardDescription>
-                  使用预设的示例 PPT 文件进行演示
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-muted rounded-md">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    点击下方按钮加载示例 PPT 文档：srm.pptx
-                  </p>
-                  <Button onClick={loadDefaultDoc} className="w-full">
-                    <FileText className="mr-2 h-4 w-4" />
-                    加载示例文档：srm.pptx
-                  </Button>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    这是一个来自 OSS 的示例 PPT 文件
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="upload" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Upload className="h-5 w-5" />
-                  上传本地文件
-                </CardTitle>
-                <CardDescription>选择您设备上的 PPT 文件</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 text-center">
-                    <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <div className="space-y-2">
-                      <p className="text-sm font-medium">选择 PPT 文件</p>
-                      <p className="text-xs text-muted-foreground">
-                        支持 .ppt 和 .pptx 格式
-                      </p>
-                    </div>
-                    <Input
-                      type="file"
-                      accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                      onChange={handleFileChange}
-                      className="mt-4"
-                    />
-                  </div>
-                  {file && (
-                    <div className="p-3 bg-muted rounded-md">
-                      <p className="text-sm">
-                        <strong>已选择文件：</strong> {file.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        文件大小：{(file.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="url" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Link className="h-5 w-5" />
-                  远程链接
-                </CardTitle>
-                <CardDescription>输入 PPT 文件的 URL 地址</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleUrlSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Input
-                      type="url"
-                      placeholder="请输入 PPT 文件的 URL（如：https://example.com/file.pptx）"
-                      value={customUrl}
-                      onChange={e => setCustomUrl(e.target.value)}
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    加载 PPT 文件
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
-
-      {pptUrl && (
-        <Card className="mb-6">
+      {currentPpt && (
+        <Card>
           <CardHeader>
-            <CardTitle>当前 PPT 文件</CardTitle>
-            <CardDescription>
-              由于浏览器限制，PPT 文件无法直接在网页中预览
-            </CardDescription>
+            <CardTitle>文档预览</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="p-4 bg-muted rounded-md">
-              <p className="text-sm mb-4">
-                <strong>文件地址：</strong>
-                <br />
-                <span className="break-all text-muted-foreground">
-                  {pptUrl}
-                </span>
-              </p>
-              <div className="flex gap-2 flex-wrap">
-                <Button onClick={downloadFile} className="flex-1 min-w-[120px]">
-                  <Download className="mr-2 h-4 w-4" />
-                  下载查看
-                </Button>
-                <Button
-                  onClick={openInNewWindow}
-                  variant="outline"
-                  className="flex-1 min-w-[120px]"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  新窗口打开
-                </Button>
+          <CardContent>
+            {hasError ? (
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  <div className="space-y-3">
+                    <p>PPT 文件预览失败。请检查文件链接是否正确，或尝试使用其他 PPT 文档。</p>
+                    <p className="text-sm text-muted-foreground">
+                      某些 PPT 文件格式可能不支持在线预览，建议使用标准的 .pptx 格式。
+                    </p>
+                  </div>
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="w-full h-[600px] border rounded-lg overflow-hidden">
+                {DocViewer && (
+                  <div className="h-full">
+                    <DocViewer
+                      documents={docs}
+                      pluginRenderers={renderers}
+                      config={{
+                        header: {
+                          disableHeader: false,
+                          disableFileName: false,
+                          retainURLParams: false,
+                        },
+                      }}
+                      style={{ height: "100%" }}
+                    />
+                  </div>
+                )}
+                {!DocViewer && (
+                  <div className="flex items-center justify-center h-full text-muted-foreground">
+                    <div className="text-center">
+                      <p className="mb-2">文档查看器加载中...</p>
+                      <p className="text-sm">如果长时间无响应，请尝试刷新页面</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       )}
 
-      <Alert>
-        <FileText className="h-4 w-4" />
-        <AlertDescription>
-          <strong>使用说明：</strong>
-          由于浏览器安全限制，PPT 文件无法直接在网页中预览。您可以：
-          <br />• 点击"下载查看"按钮下载文件到本地，然后使用 PowerPoint
-          或其他支持的应用程序打开
-          <br />• 点击"新窗口打开"按钮在新标签页中打开文件（可能会触发下载）
-          <br />• 支持的格式：.ppt、.pptx
-        </AlertDescription>
-      </Alert>
+      <Card>
+        <CardHeader>
+          <CardTitle>功能特点</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <h4 className="font-medium mb-2">支持格式</h4>
+              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <li>Microsoft PowerPoint (.pptx)</li>
+                <li>在线 URL 链接</li>
+                <li>实时预览</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-medium mb-2">预览功能</h4>
+              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                <li>在线直接预览</li>
+                <li>支持幻灯片导航</li>
+                <li>响应式布局</li>
+                <li>支持缩放和全屏</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
