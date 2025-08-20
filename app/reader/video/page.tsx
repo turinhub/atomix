@@ -65,27 +65,13 @@ export default function VideoReaderPage() {
   const loadDefaultVideo = () => {
     setIsLoading(true);
 
-    // 检查默认视频是否可访问（仅在客户端环境）
+    // 直接加载默认视频，不进行可访问性检查以避免CORS问题
     if (typeof window !== "undefined") {
-      fetch(DEFAULT_VIDEO_URL, { method: "HEAD" })
-        .then(response => {
-          if (response.ok) {
-            setCurrentVideo(DEFAULT_VIDEO_URL);
-            setTitle("AI 吉祥物演示视频");
-            setVideoUrl(DEFAULT_VIDEO_URL);
-            toast.success("已加载默认视频文件");
-          } else {
-            setCurrentVideo("");
-            toast.error("默认视频文件无法访问");
-          }
-        })
-        .catch(() => {
-          setCurrentVideo("");
-          toast.error("默认视频文件加载失败");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      setCurrentVideo(DEFAULT_VIDEO_URL);
+      setTitle("AI 吉祥物演示视频");
+      setVideoUrl(DEFAULT_VIDEO_URL);
+      toast.success("已加载默认视频文件");
+      setIsLoading(false);
     } else {
       // 服务器端渲染时不加载视频
       setIsLoading(false);
