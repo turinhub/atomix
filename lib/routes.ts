@@ -41,6 +41,13 @@ export const toolCategories: ToolCategory[] = [
         url: "/reader/pdf",
       },
       {
+        name: "PDF 阅读器（简洁版）",
+        title: "PDF 阅读器（简洁版）",
+        description: "PDF 阅读器（简洁版）",
+        path: "/reader/pdf2",
+        url: "/reader/pdf2",
+      },
+      {
         name: "视频播放器",
         title: "视频播放器",
         description: "在线视频播放工具",
