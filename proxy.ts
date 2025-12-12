@@ -4,7 +4,7 @@ import { isHumanVerified } from "./lib/turnstile";
 // 需要人机验证的路径
 const PROTECTED_PATHS = ["/protected", "/api/protected"];
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 检查当前路径是否需要保护

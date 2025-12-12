@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    resolveAlias: {
+      canvas: { browser: "./lib/empty.js" },
+      encoding: { browser: "./lib/empty.js" },
+    },
+  },
   reactStrictMode: true,
   webpack: config => {
     // 只为 PDF.js 相关模块设置 canvas = false
