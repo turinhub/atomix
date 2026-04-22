@@ -113,13 +113,6 @@ export const toolCategories: ToolCategory[] = [
         url: "/ai/ai-image",
       },
       {
-        name: "Dify API 对话",
-        title: "Dify API 对话",
-        description: "基于 Dify API 的对话工具，使用 DeepSeek R1",
-        path: "/ai/dify-chat",
-        url: "/ai/dify-chat",
-      },
-      {
         name: "LangGraph Agent 对话",
         title: "LangGraph Agent 对话",
         description: "基于 LangGraph 的智能 Agent 对话，支持工具调用和多轮对话",

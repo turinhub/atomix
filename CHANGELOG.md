@@ -2,6 +2,7 @@
 
 # Unreleased
 
+- 移除 Dify API 对话功能及相关代码
 - 增加 LangGraph Agent 对话页面，支持工具调用和多轮对话流式响应
 - 升级 Next.js 16.0.10 → 16.2.4
 - 字体加载从 Google Fonts CDN 改为本地 woff2 文件，解决构建时网络依赖问题
