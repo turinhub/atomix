@@ -1,90 +1,84 @@
-# ChangeLog
+# Changelog
 
-# Unreleased
+All notable changes to this project will be documented in this file.
 
-- 移除 Dify API 对话功能及相关代码
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.19] - 2026-04-22
+
+- 升级 Next.js 16.0.10 → 16.2.4，字体加载改为本地 woff2 文件
 - 增加 LangGraph Agent 对话页面，支持工具调用和多轮对话流式响应
-- 升级 Next.js 16.0.10 → 16.2.4
-- 字体加载从 Google Fonts CDN 改为本地 woff2 文件，解决构建时网络依赖问题
-- 重构 AI 对话页面：使用 Vercel AI SDK（useChat + streamText）替代手动 SSE 流式实现
-- AI 对话后端从 Cloudflare Workers AI 切换到阿里云 DashScope（Qwen Flash 模型）
-- 将页面拆分为 chat-page 和 markdown-renderer 两个独立组件
-- 移除未使用的 components/ai/ 和 lib/ai/ 目录
+- 重构 AI 对话页面：使用 Vercel AI SDK（useChat + streamText）替代手动 SSE 实现，后端切换到阿里云 DashScope（Qwen Flash）
+- 移除 Dify API 对话功能及相关代码
+- 清理 11 个未使用的 npm 依赖
 
-# v0.1.18 - 20250823
+## [0.1.18] - 2025-08-23
 
 - 增加 PDF 阅读器（简洁版）
 
-# v0.1.17 - 20250819
+## [0.1.17] - 2025-08-19
 
 - 增加视频播放页面
 - 更新 PDF 页面
 - 增加 WORD、PPT 展示页面
 
-# v0.1.16 - 20250815
+## [0.1.16] - 2025-08-15
 
 - 增加知识图谱
 
-# v0.1.15 - 20250718
+## [0.1.15] - 2025-07-18
 
-- 增加 ai 对话、ai 图像生成
-- 删除原先的 cloudflare 对话服务
-- 增加 prettier 格式化代码
+- 增加 AI 对话、AI 图像生成
+- 删除原先的 Cloudflare 对话服务
+- 增加 Prettier 格式化代码
 
-# v0.1.14 - 20250617
+## [0.1.14] - 2025-06-17
 
-- 增加 markdown 在线编辑器
-- 增加 latex 在线编辑器
+- 增加 Markdown 在线编辑器
+- 增加 LaTeX 在线编辑器
 - 增加导航栏搜索
 
-# v0.1.13 - 20250609
+## [0.1.13] - 2025-06-09
 
-- 增加一个 office spreadsheet 的案例。
+- 增加 Office Spreadsheet 案例
 
-# v0.1.11 - v0.1.12 - 20250523
+## [0.1.11] - [0.1.12] - 2025-05-23
 
-- 增加一个 Globe.gl 的案例。
-- 拆分高德地图和 mapbox。
+- 增加 Globe.gl 案例
+- 拆分高德地图和 Mapbox
 
-# v0.1.10 - 20250508
+## [0.1.10] - 2025-05-08
 
-- 增加 Excalidraw 的演示页面，目前存在兼容性问题。
+- 增加 Excalidraw 演示页面
 
-# v0.1.9 - 20250422
+## [0.1.9] - 2025-04-22
 
-- 增加 PixiJS 动画演示页面。
+- 增加 PixiJS 动画演示页面
 
-# v0.1.8 - 20250421
+## [0.1.8] - 2025-04-21
 
-- 增加 KeplerGL 基础 Demo。
+- 增加 KeplerGL 基础 Demo
 
-## v0.1.7 - 20250420
+## [0.1.7] - 2025-04-20
 
-- 增加高德地图的碳排放地图的 Demo，增加对 Mapbox 的支持。
+- 增加高德地图碳排放地图 Demo，增加对 Mapbox 的支持
 
-## v0.1.6 - 20250417
+## [0.1.6] - 2025-04-17
 
 - 增加 GIS 目录
 
-## v0.1.5 - 20250313
+## [0.1.5] - 2025-03-13
 
-- 优化对话页面的思考过程隐藏机制。
+- 优化对话页面的思考过程隐藏机制
 
-## v0.1.2 - v0.1.4 - 20250312
+## [0.1.2] - [0.1.4] - 2025-03-12
 
 - 增加 AI 对话页面，兼容 Cloudflare API
 - 增加 Dify 对话页面，允许隐藏思考过程
 
-## v0.1.0 - v0.1.1 - 20250226
+## [0.1.0] - [0.1.1] - 2025-02-26
 
 - 新增 PDF 浏览器、视频播放器
 - 新增 Cloudflare Turnstile 示例页面
-- init
-
-# TODO List
-
-- [x] 增加 KeplerGL 的 Demo 页面（https://github.com/keplergl/kepler.gl）
-- [ ] 补充 MDX 文档目录
-- [ ] 补充 turingue 的 pdf 阅读方案
-- [ ] 增加 ai 图像生成、ai 对话功能
-- [ ] 增加 表格 Demo，使用 Shadcn UI Data Table
+- 项目初始化
