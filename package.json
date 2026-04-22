@@ -13,6 +13,8 @@
     "format:staged": "prettier --write"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.53",
+    "@ai-sdk/react": "^3.0.170",
     "@antv/l7": "^2.22.5",
     "@antv/l7-maps": "^2.22.5",
     "@excalidraw/excalidraw": "^0.18.0",
@@ -42,6 +44,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@types/d3": "^7.4.3",
     "@uiw/react-md-editor": "^4.0.7",
+    "ai": "^6.0.168",
     "bufferutil": "^4.0.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

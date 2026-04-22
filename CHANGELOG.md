@@ -6,6 +6,10 @@
 - 增加 LangGraph Agent 对话页面，支持工具调用和多轮对话流式响应
 - 升级 Next.js 16.0.10 → 16.2.4
 - 字体加载从 Google Fonts CDN 改为本地 woff2 文件，解决构建时网络依赖问题
+- 重构 AI 对话页面：使用 Vercel AI SDK（useChat + streamText）替代手动 SSE 流式实现
+- AI 对话后端从 Cloudflare Workers AI 切换到阿里云 DashScope（Qwen Flash 模型）
+- 将页面拆分为 chat-page 和 markdown-renderer 两个独立组件
+- 移除未使用的 components/ai/ 和 lib/ai/ 目录
 
 # v0.1.18 - 20250823
 
