@@ -1,5 +1,10 @@
 # ChangeLog
 
+# Unreleased
+
+- 升级 Next.js 16.0.10 → 16.2.4
+- 字体加载从 Google Fonts CDN 改为本地 woff2 文件，解决构建时网络依赖问题
+
 # v0.1.18 - 20250823
 
 - 增加 PDF 阅读器（简洁版）
