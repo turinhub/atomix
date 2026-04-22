@@ -112,6 +112,7 @@ export function Thread() {
   };
 
   const handleNewThread = () => {
+    stream.stop();
     stream.setThreadId(null);
     setFirstTokenReceived(false);
   };

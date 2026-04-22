@@ -37,6 +37,7 @@ export function LangGraphStreamProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [threadId, setThreadIdState] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const generationRef = useRef(0);
 
   const setThreadId = useCallback((id: string | null) => {
     setThreadIdState(id);
@@ -47,6 +48,7 @@ export function LangGraphStreamProvider({ children }: { children: ReactNode }) {
   const stop = useCallback(() => {
     abortControllerRef.current?.abort();
     abortControllerRef.current = null;
+    generationRef.current += 1;
     setIsLoading(false);
   }, []);
 
@@ -59,6 +61,7 @@ export function LangGraphStreamProvider({ children }: { children: ReactNode }) {
 
       const controller = new AbortController();
       abortControllerRef.current = controller;
+      const thisGeneration = ++generationRef.current;
 
       setIsLoading(true);
       setError(null);
@@ -147,6 +150,7 @@ export function LangGraphStreamProvider({ children }: { children: ReactNode }) {
           setError(err instanceof Error ? err.message : "未知错误");
         })
         .finally(() => {
+          if (generationRef.current !== thisGeneration) return;
           setIsLoading(false);
           abortControllerRef.current = null;
         });

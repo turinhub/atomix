@@ -12,6 +12,8 @@ const model = new ChatOpenAI({
     : undefined,
 });
 
+// MemorySaver 仅适用于单进程开发环境，实例重启/扩容后上下文丢失
+// 生产环境应替换为持久化 checkpointer（如 Redis、数据库）
 const checkpointer = new MemorySaver();
 
 const weatherTool = new DynamicStructuredTool({
